@@ -4,6 +4,8 @@ A personal mutual fund tracker. Every Saturday morning it tells Meera, in plain 
 
 MESA Cohort C4, AI and its Applications, Section 1 final examination, Problem Statement 19.
 
+**Repo:** https://github.com/patilprithvi2098/Mutual-FundDashboard
+
 **Live URL:** _add your Vercel URL here_
 
 ## What it does
@@ -48,7 +50,7 @@ Rows are the components; columns are the stage of the flow. Colours: People, AI,
 
 - **Smallcap index.** The brief names Nifty Smallcap 100. No free source returns its history, so Nifty Smallcap 250 is used. It is also Nippon India Small Cap's official benchmark.
 - **Debt funds have no benchmark index.** No free feed exists, so they are compared to the category average only.
-- **Price indices, not total-return indices.** Benchmarks exclude dividends, so fund-vs-benchmark gaps are slightly flattering to the benchmark's complement; the 2pp threshold absorbs this.
+- **Price indices, not total-return indices.** Benchmarks exclude dividends, so a fund can look slightly better than its benchmark than it really is; the 2pp threshold absorbs most of this.
 - **Nasdaq fund** is compared with Nasdaq 100 in USD terms; rupee moves are not adjusted.
 - **Database.** The brief mentions Supabase; this build uses Neon. The code is plain Postgres (`pg`), so switching is a connection-string change.
 - **Public write access.** The fund form and "generate now" button have no login, with a 10-fund cap and a 60-second cooldown. Fine for a demo, add auth before real use.
