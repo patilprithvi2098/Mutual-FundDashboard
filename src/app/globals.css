@@ -1,46 +1,54 @@
 @import "tailwindcss";
 
+/* Light design system: calm neutrals, one deep indigo accent, green for up, red used sparingly, amber for "watch". */
 :root {
-  --bg: #faf8f4; --card: #ffffff; --ink: #1f2430; --muted: #6b7280; --line: #e7e2d9;
-  --good: #0f7a5a; --bad: #b4412b; --warn: #a86a00; --accent: #3b3a9e;
+  --bg: #f7f8f7; --card: #ffffff; --ink: #172033; --soft: #344054; --muted: #667085; --faint: #8a93a3;
+  --line: #e6e8ec; --line-strong: #d5d9e0; --wash: #f1f3f5;
+  --good: #12805c; --good-soft: #e7f4ee;
+  --bad: #c2412d; --bad-soft: #fcece9;
+  --warn: #b26b00; --warn-soft: #fdf3e1;
+  --accent: #3730a3; --accent-soft: #eef0fb; --accent-ink: #2e2a85;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
 }
 @theme inline {
-  --color-bg: var(--bg); --color-card: var(--card); --color-ink: var(--ink); --color-muted: var(--muted);
-  --color-line: var(--line); --color-good: var(--good); --color-bad: var(--bad); --color-warn: var(--warn); --color-accent: var(--accent);
+  --color-bg: var(--bg); --color-card: var(--card); --color-ink: var(--ink); --color-soft: var(--soft); --color-muted: var(--muted);
+  --color-faint: var(--faint); --color-line: var(--line); --color-wash: var(--wash);
+  --color-good: var(--good); --color-good-soft: var(--good-soft); --color-bad: var(--bad); --color-bad-soft: var(--bad-soft);
+  --color-warn: var(--warn); --color-warn-soft: var(--warn-soft); --color-accent: var(--accent); --color-accent-soft: var(--accent-soft);
   --font-sans: var(--font-geist-sans); --font-mono: var(--font-geist-mono);
 }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-geist-sans), system-ui, sans-serif; }
 .num { font-variant-numeric: tabular-nums; }
 
-/* Ledger look. Applies only when a page renders a .ledger element. */
-body:has(.ledger) { background: oklch(0.2 0.012 255); color: oklch(0.94 0.005 255); }
-body:has(.ledger) header.border-b { background: oklch(0.17 0.012 255); border-color: oklch(0.32 0.012 255); }
-body:has(.ledger) header.border-b a { color: oklch(0.78 0.008 255); }
-body:has(.ledger) header.border-b a:hover { color: oklch(0.98 0.004 255); }
-body:has(.ledger) footer { color: oklch(0.68 0.01 255); }
-.ledger { --l-ok: oklch(0.8 0.12 155); --l-watch: oklch(0.82 0.12 80); --l-review: oklch(0.76 0.13 30); }
-.ledger .l-ok { color: var(--l-ok); } .ledger .l-watch { color: var(--l-watch); } .ledger .l-review { color: var(--l-review); }
-.ledger .l-watch-text { color: var(--l-watch); }
-.ledger .l-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-.ledger .l-line { border-color: oklch(0.32 0.012 255); }
-.ledger .l-soft { color: oklch(0.86 0.006 255); }
-.ledger .l-muted { color: oklch(0.76 0.008 255); }
-.ledger .l-faint { color: oklch(0.7 0.01 255); }
-.ledger .l-bar-on { background: var(--l-watch); } .ledger .l-bar-off { background: oklch(0.36 0.012 255); }
-.ledger button { color: inherit; }
+/* Shared surfaces. */
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
+.eyebrow { font: 500 11px/1.4 var(--font-geist-mono), monospace; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); }
+.badge { width: 36px; height: 36px; flex: none; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; background: var(--accent-soft); color: var(--accent-ink); }
+.seg { display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--wash); }
+.seg button { flex: 1; min-height: 34px; padding: 0 10px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* Steps 3 to 6 additions. Append after the step 2 block. */
-.ledger .l-chip { display: inline-block; font: 500 12px var(--font-geist-mono), monospace; padding: 4px 10px; border-radius: 4px; background: oklch(0.3 0.012 255); color: oklch(0.88 0.006 255); }
-.ledger .l-card { border: 1px solid oklch(0.36 0.012 255); border-radius: 10px; background: oklch(0.23 0.012 255); }
-.ledger .l-plus { width: 28px; height: 28px; flex: none; border-radius: 50%; border: 1px solid oklch(0.55 0.012 255); display: inline-flex; align-items: center; justify-content: center; font-size: 18px; line-height: 1; color: oklch(0.86 0.006 255); }
-.ledger .l-swatch { width: 12px; height: 12px; border-radius: 2px; display: inline-block; flex: none; }
-.ledger .l-q { width: 20px; height: 20px; border-radius: 50%; border: 1px solid oklch(0.55 0.012 255); display: inline-flex; align-items: center; justify-content: center; font: 500 11px var(--font-geist-sans), sans-serif; color: oklch(0.82 0.008 255); }
-.ledger button:hover .l-q, .ledger button:focus-visible .l-q { background: oklch(0.36 0.014 255); }
-.ledger .l-pop { position: absolute; top: calc(100% + 6px); z-index: 20; width: min(280px, 78vw); white-space: normal; text-align: left; background: oklch(0.3 0.014 255); border: 1px solid oklch(0.44 0.014 255); border-radius: 8px; padding: 12px 14px; font: 400 14px/1.5 var(--font-geist-sans), sans-serif; color: oklch(0.94 0.005 255); box-shadow: 0 8px 24px rgba(0,0,0,.4); }
-.ledger button:focus-visible { outline: 2px solid oklch(0.82 0.1 230); outline-offset: 2px; }
+/* The .ledger classes from the earlier dark design, remapped to the light palette so every page shares one look. */
+.ledger, body { --l-ok: var(--good); --l-watch: var(--warn); --l-review: var(--bad); }
+.l-ok { color: var(--l-ok); } .l-watch { color: var(--l-watch); } .l-review { color: var(--l-review); }
+.l-watch-text { color: var(--l-watch); }
+.l-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.l-line { border-color: var(--line); }
+.l-soft { color: var(--soft); }
+.l-muted { color: var(--muted); }
+.l-faint { color: var(--faint); }
+.l-bar-on { background: var(--l-watch); } .l-bar-off { background: var(--line); }
+button { color: inherit; }
+.l-chip { display: inline-block; font: 500 12px var(--font-geist-mono), monospace; padding: 4px 10px; border-radius: 999px; background: var(--wash); color: var(--soft); border: 1px solid var(--line); }
+.l-card { border: 1px solid var(--line); border-radius: 16px; background: var(--card); box-shadow: var(--shadow); }
+.l-plus { width: 28px; height: 28px; flex: none; border-radius: 50%; border: 1px solid var(--line-strong); display: inline-flex; align-items: center; justify-content: center; font-size: 18px; line-height: 1; color: var(--soft); }
+.l-swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex: none; }
+.l-input { background: var(--card); border-color: var(--line-strong); color: var(--ink); }
+.l-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.l-primary { background: var(--accent); color: #fff; }
 
-/* Goals page form controls in the ledger look. */
-.ledger input { color-scheme: dark; }
-.ledger .l-input { background: oklch(0.17 0.012 255); border-color: oklch(0.42 0.012 255); color: oklch(0.94 0.005 255); }
-.ledger .l-input:focus { outline: 2px solid oklch(0.82 0.1 230); outline-offset: 1px; }
-.ledger .l-primary { background: oklch(0.9 0.006 255); color: oklch(0.18 0.012 255); }
+/* Tooltip pieces used by <Tip>, on any page. */
+.l-q { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--line-strong); display: inline-flex; align-items: center; justify-content: center; font: 500 11px var(--font-geist-sans), sans-serif; color: var(--muted); background: var(--card); }
+button:hover .l-q, button:focus-visible .l-q { background: var(--wash); }
+.l-pop { position: absolute; top: calc(100% + 6px); z-index: 20; width: min(280px, 78vw); white-space: normal; text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font: 400 14px/1.5 var(--font-geist-sans), sans-serif; color: var(--soft); box-shadow: 0 12px 32px rgba(16, 24, 40, 0.12); }

@@ -4,7 +4,7 @@ import { useState } from "react";
 export default function SipCard() {
   const [open, setOpen] = useState(false);
   return (
-    <section className="l-card mt-14">
+    <section className="l-card">
       <button type="button" aria-expanded={open} onClick={() => setOpen((o) => !o)} className="flex min-h-[44px] w-full cursor-pointer items-center justify-between gap-3 px-[18px] py-4 text-left">
         <span className="block text-base font-semibold">How SIPs work</span>
         <span className="l-plus" aria-hidden>{open ? "\u2212" : "+"}</span>

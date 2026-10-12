@@ -5,7 +5,7 @@ export const PACE: Record<Pace, { word: string; hue: string }> = {
   "on-pace": { word: "On pace", hue: "var(--l-ok)" },
   "slightly-behind": { word: "Slightly behind", hue: "var(--l-watch)" },
   "well-behind": { word: "Well behind", hue: "var(--l-review)" },
-  past: { word: "Date passed", hue: "oklch(0.74 0.01 255)" },
+  past: { word: "Date passed", hue: "var(--faint)" },
 };
 
 const NUM = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
@@ -59,12 +59,12 @@ export default function GoalItem({ goal, today, editHref, action, children }: {
         <span className="num">{rupees(goal.target_amount)}</span>
         <span>by {when}</span>
       </div>
-      <div className="mt-4 h-2 overflow-hidden rounded-full" style={{ background: "oklch(0.3 0.012 255)" }} role="img" aria-label={`${Math.round(share)} percent saved`}>
+      <div className="mt-4 h-2 overflow-hidden rounded-full" style={{ background: "var(--wash)" }} role="img" aria-label={`${Math.round(share)} percent saved`}>
         <div className="h-full rounded-full" style={{ width: `${share}%`, background: s.hue }} />
       </div>
       <p className="l-faint mt-2 font-mono text-[13px]">{rupees(goal.saved_amount)} saved so far · {rupees(goal.monthly_amount)} a month</p>
       <p className="l-soft mt-3.5 text-[16px] leading-relaxed [text-wrap:pretty]">{sentence}</p>
-      {editHref && <a href={editHref} className="mt-3.5 inline-block text-[15px] underline underline-offset-4 hover:no-underline" style={{ color: "oklch(0.8 0.1 240)" }}>Edit this goal</a>}
+      {editHref && <a href={editHref} className="mt-3.5 inline-block text-[15px] underline underline-offset-4 hover:no-underline" style={{ color: "var(--accent)" }}>Edit this goal</a>}
       {action}
       {children}
     </div>

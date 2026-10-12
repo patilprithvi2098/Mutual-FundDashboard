@@ -13,9 +13,9 @@ export default async function GoalsPage({ searchParams }: { searchParams: Promis
   const edit = Number(sp.edit);
   return (
     <div className="ledger">
-      <div className="grid gap-x-16 gap-y-10 lg:grid-cols-[380px_minmax(0,1fr)]">
+      <div className="grid gap-x-16 gap-y-10 lg:grid-cols-[360px_minmax(0,1fr)]">
         <header className="self-start lg:sticky lg:top-8">
-          <h1 className="text-[32px] font-semibold leading-[1.12] tracking-tight lg:text-[38px]">Your goals</h1>
+          <h1 className="text-[26px] font-semibold leading-tight tracking-tight lg:text-[30px]">Your goals</h1>
           <p className="l-soft mt-3.5 text-[17px] leading-relaxed [text-wrap:pretty] lg:text-lg">{goalsHeadline(goals.map((g) => paceOf(g, today).pace))}</p>
           <p className="l-faint mt-4 text-xs leading-relaxed">
             Projections assume an annual return of {RATE_LOW * 100}% to {RATE_HIGH * 100}%, compounded monthly, on money already saved and on each

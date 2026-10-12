@@ -56,7 +56,7 @@ const ROWS: [keyof (typeof OPTIONS)[number], string][] = [
 export default function MoneyComparison() {
   const [open, setOpen] = useState(false);
   return (
-    <section className="l-card mt-6">
+    <section className="l-card mt-4">
       <button type="button" aria-expanded={open} onClick={() => setOpen((o) => !o)} className="flex min-h-[44px] w-full cursor-pointer items-center justify-between gap-3 px-[18px] py-4 text-left">
         <span className="block text-base font-semibold">Where else can money go?</span>
         <span className="l-plus" aria-hidden>{open ? "−" : "+"}</span>
@@ -66,7 +66,7 @@ export default function MoneyComparison() {
           <p className="l-muted text-sm leading-relaxed">Returns are rough historical ranges, not predictions.</p>
           <div className="mt-2">
             {OPTIONS.map((o) => (
-              <div key={o.name} className="border-b py-4 last:border-b-0" style={{ borderColor: "oklch(0.3 0.012 255)" }}>
+              <div key={o.name} className="border-b py-4 last:border-b-0" style={{ borderColor: "var(--line)" }}>
                 <p className="font-semibold">{o.name}</p>
                 <p className="l-muted mt-0.5 text-sm">{o.what}</p>
                 <dl className="mt-3 space-y-2 text-sm">

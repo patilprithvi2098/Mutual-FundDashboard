@@ -1,106 +1,142 @@
 import { latestReport } from "@/lib/queries";
-import { activeFunds, seedIfEmpty } from "@/lib/pipeline";
-import { chartData } from "@/lib/chart";
-import { VERDICTS, longDate, shortDate, marketParagraph, pct } from "@/lib/ledger";
-import FundRow from "@/components/FundRow";
-import FundChart from "@/components/FundChart";
-import Tip from "@/components/Tip";
-import SipCard from "@/components/SipCard";
-import RunButton from "@/components/RunButton";
-import GoalsCard from "@/components/GoalsCard";
-import MoneyComparison from "@/components/MoneyComparison";
+import { seedIfEmpty } from "@/lib/pipeline";
 import { listGoals } from "@/lib/goals";
+import { VERDICTS } from "@/lib/ledger";
+import { initials, inr0, loadPortfolio, plainCategory, shortName } from "@/lib/portfolio";
+import ValueChart, { CountUp } from "@/components/ValueChart";
+import GoalsCard from "@/components/GoalsCard";
+import SipCard from "@/components/SipCard";
+import MoneyComparison from "@/components/MoneyComparison";
+import RunButton from "@/components/RunButton";
+import { MarketCards, Sparkline, StatusPill, pctS, tone } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
-  let data = null;
-  let err = "";
+function greeting() {
+  const h = new Date(Date.now() + 5.5 * 3600e3).getUTCHours();
+  return h < 5 ? "Good evening" : h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+}
+const monthYear = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "UTC" });
+const newsDate = (s: string) => { const d = new Date(s); return isNaN(+d) ? "" : d.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Asia/Kolkata" }); };
+
+export default async function Overview() {
+  let data, pf;
   try {
     await seedIfEmpty();
-    data = await latestReport();
+    [data, pf] = await Promise.all([latestReport(), loadPortfolio()]);
   } catch (e) {
-    err = (e as Error).message;
+    return <p className="card bg-bad-soft p-4 text-bad">Could not reach the database: {(e as Error).message}</p>;
   }
-  if (err) return <p className="rounded-lg border border-red-200 bg-red-50 p-4 text-bad">Could not reach the database: {err}</p>;
-  if (!data)
-    return (
-      <div className="space-y-4">
-        <h1 className="text-2xl font-semibold">No report yet</h1>
-        <p className="text-muted">Your five starter funds are set up. Generate the first report, or wait for Saturday morning’s automatic run.</p>
-        <RunButton />
-      </div>
-    );
-
-  const { report: r, snaps } = data;
-  const funds = await activeFunds();
-  const symbol = new Map(funds.map((f) => [f.scheme_code, f.benchmark_symbol as string | null]));
-  const charts = await Promise.all(snaps.map((s) => chartData(s.scheme_code, symbol.get(s.scheme_code) ?? null, s.as_of).catch(() => null)));
-  const navAsOf = snaps.map((s) => s.as_of).sort().at(-1) ?? r.week_ending;
-  const active = VERDICTS.indexOf(r.assessment as (typeof VERDICTS)[number]);
-  const hues = ["var(--l-ok)", "var(--l-watch)", "var(--l-review)"];
-  // Goals are separate from the report; if they fail to load, the report still renders.
   const goals = await listGoals().catch(() => null);
+  const last = pf.series.at(-1);
+  const value = last?.value ?? 0, invested = last?.invested ?? 0, gain = value - invested;
+  const sipTotal = pf.funds.reduce((s, f) => s + (pf.sipByCode[f.scheme_code] ?? 0), 0);
+  const snapBy = new Map((data?.snaps ?? []).map((s) => [s.scheme_code, s]));
+  const holdBy = new Map(pf.holdings.map((h) => [h.scheme_code, h]));
+  const r = data?.report;
+  const vIdx = r ? VERDICTS.indexOf(r.assessment as (typeof VERDICTS)[number]) : -1;
+  const vHue = ["var(--good)", "var(--warn)", "var(--bad)"][vIdx] ?? "var(--accent)";
+  const vSoft = ["var(--good-soft)", "var(--warn-soft)", "var(--bad-soft)"][vIdx] ?? "var(--accent-soft)";
 
   return (
-    <div className="ledger">
-      <div className="grid gap-x-16 gap-y-14 lg:grid-cols-[380px_minmax(0,1fr)]">
-        <header className="self-start lg:sticky lg:top-8">
-          <p className="l-faint font-mono text-xs tracking-[0.08em]">WEEKLY REPORT · GENERATED {shortDate(r.generated_at)}</p>
-          <p className="l-muted mt-3 text-sm leading-relaxed [text-wrap:pretty]">
-            A plain-language weekly report on Meera&apos;s mutual funds, written by Gemini Flash from live fund prices, index levels and market news.
+    <div className="space-y-8">
+      <header>
+        <h1 className="text-[26px] font-semibold tracking-tight lg:text-[30px]">{greeting()}, Meera</h1>
+        <p className="mt-1 text-[15px] text-muted">Here is how your funds are doing.</p>
+      </header>
+
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <section className="card p-5 lg:p-6">
+          <p className="eyebrow">Portfolio value</p>
+          <CountUp value={value} className="num mt-2 block text-[34px] font-semibold leading-none tracking-tight lg:text-[40px]" />
+          <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+            <span className="text-muted">Invested <span className="num font-medium text-ink">{inr0(invested)}</span></span>
+            <span className="text-muted">Gain <span className={`num font-medium ${tone(gain)}`}>{gain >= 0 ? "+" : "−"}{inr0(Math.abs(gain))}{invested > 0 && ` (${pctS((gain / invested) * 100)})`}</span></span>
+          </div>
+          <p className="mt-2 text-xs leading-relaxed text-faint">
+            Simulated: sample SIPs of {inr0(sipTotal)} a month across {pf.funds.length} funds, bought on the first trading day of each month
+            {pf.start ? ` since ${monthYear(pf.start)}` : ""}, valued with real NAVs. Not linked to a real account.
           </p>
-          <p className="l-faint mt-8 font-mono text-[11px] uppercase tracking-[0.06em]">The three possible verdicts</p>
-          <div className="mt-2 flex gap-1.5">
-            {VERDICTS.map((v, i) => (<div key={v} style={i === active ? { background: hues[i] } : undefined} className={`h-1 flex-1 rounded-sm ${i === active ? "" : "l-bar-off"}`} />))}
-          </div>
-          <div className="mt-2 flex gap-1.5 text-[11px] leading-snug">
-            {VERDICTS.map((v, i) => (<div key={v} style={i === active ? { color: hues[i] } : undefined} className={`flex-1 ${i === active ? "font-medium" : "l-faint"}`}>{v}</div>))}
-          </div>
-          <h1 className="mt-7 text-[32px] font-semibold leading-[1.12] tracking-tight lg:text-[38px]">{r.assessment}</h1>
-          <p className="l-soft mt-3.5 text-[17px] leading-relaxed [text-wrap:pretty] lg:text-lg">{r.reason}</p>
-          <p className="l-faint mt-4 font-mono text-xs">Updated with NAV as of {longDate(navAsOf)}</p>
-          <a href="/example" className="mt-3 inline-block text-sm underline underline-offset-4 hover:no-underline" style={{ color: "oklch(0.8 0.1 240)" }}>See what a warning looks like</a>
-          {!r.ai_used && <p className="l-chip mt-3">Written by our backup rules</p>}
-        </header>
+          <div className="mt-5 border-t border-line pt-5"><ValueChart series={pf.series} /></div>
+        </section>
 
-        <div>
-          <section>
-            <h2 className="text-lg font-semibold lg:text-xl">Your funds</h2>
-            <p className="l-muted mt-1.5 text-sm leading-relaxed lg:text-[15px]">Each fund is shown next to the index it is measured against, for the past week.</p>
-            <div className="l-faint mt-5 grid grid-cols-[minmax(0,1fr)_64px_76px] gap-x-3 pb-2 font-mono text-[11px] uppercase tracking-[0.06em] lg:grid-cols-[minmax(0,1fr)_150px_80px_100px] lg:gap-x-4">
-              <span />
-              <span className="hidden lg:block" />
-              <span className="text-right">Fund</span>
-              <span className="text-right">Benchmark<Tip term="benchmark" align="right" /></span>
-            </div>
-            {snaps.map((s, i) => (
-              <FundRow key={s.scheme_code} name={s.fund_name} status={s.status} fund1w={s.ret_1w} bench1w={s.bench_1w} summary={s.summary ?? "A written summary is not available for this week."}>
-                {charts[i] && <FundChart data={charts[i]!} fundName={s.fund_name} />}
-                {s.cat_1w != null && (
-                  <p className="l-muted mt-4 text-sm">Category average this week <span className="num font-mono l-soft">{pct(s.cat_1w)}</span><Tip term="category" /></p>
-                )}
-              </FundRow>
-            ))}
-            <div className="border-t l-line" />
-          </section>
-
-          <section className="mt-14">
-            <h2 className="text-lg font-semibold lg:text-xl">The market this week</h2>
-            <p className="l-soft mt-3 max-w-[620px] text-base leading-[1.65] [text-wrap:pretty] lg:text-[17px]">{marketParagraph(r.market_summary, r.market)}</p>
-          </section>
-
-          <SipCard />
-
-          {goals && <GoalsCard goals={goals} />}
-
-          <MoneyComparison />
-
-          <div className="l-faint mt-14 flex flex-wrap items-center justify-between gap-3 text-xs">
-            <span>{r.ai_used ? `Written by ${r.model}` : ""}</span>
-            <RunButton label="Regenerate now" />
-          </div>
+        <div className="space-y-5">
+          {r ? (
+            <a href="/report" className="card block p-5 transition-shadow hover:shadow-md">
+              <p className="eyebrow">This week&apos;s verdict</p>
+              <p className="mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold" style={{ background: vSoft, color: vHue }}>
+                <span className="h-2 w-2 rounded-full bg-current" />{r.assessment}
+              </p>
+              <p className="mt-3 line-clamp-4 text-[15px] leading-relaxed text-soft">{r.reason}</p>
+              <p className="mt-3 text-sm font-medium text-accent">Read the weekly report &rarr;</p>
+            </a>
+          ) : (
+            <div className="card p-5"><p className="text-sm text-muted">No weekly report yet.</p><div className="mt-3"><RunButton /></div></div>
+          )}
+          {r && r.market.length > 0 && (
+            <section>
+              <h2 className="mb-3 text-base font-semibold">Markets this week</h2>
+              <MarketCards market={r.market} className="grid-cols-1 sm:grid-cols-3 lg:grid-cols-1" />
+            </section>
+          )}
         </div>
+      </div>
+
+      <section>
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="text-lg font-semibold">Your funds</h2>
+          <a href="/fund" className="text-sm font-medium text-accent hover:underline">All funds</a>
+        </div>
+        <div className="card mt-3 divide-y divide-line overflow-hidden">
+          {pf.funds.map((f) => {
+            const s = snapBy.get(f.scheme_code), h = holdBy.get(f.scheme_code);
+            const spark = (pf.navs.get(f.scheme_code) ?? []).slice(-60).map((p) => p.value);
+            return (
+              <a key={f.scheme_code} href={`/fund/${f.scheme_code}`} className="flex items-center gap-3 px-4 py-3.5 transition-colors hover:bg-wash sm:px-5">
+                <span className="badge">{initials(f.name)}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[15px] font-medium">{shortName(f.name)}</span>
+                  <span className="block truncate text-[13px] text-muted">{plainCategory(f.category, f.name)}</span>
+                </span>
+                <Sparkline data={spark} className="hidden sm:block" />
+                <span className="w-[112px] text-right sm:w-[150px]">
+                  <span className="num block text-[15px] font-semibold">{h ? inr0(h.value) : "n/a"}</span>
+                  <span className="num block text-xs text-muted">
+                    1W <span className={`font-medium ${tone(s?.ret_1w)}`}>{pctS(s?.ret_1w)}</span>
+                    {s?.bench_1w != null ? <> vs {pctS(s.bench_1w)}</> : s?.cat_1w != null ? <> vs cat. {pctS(s.cat_1w)}</> : null}
+                  </span>
+                </span>
+              </a>
+            );
+          })}
+        </div>
+        {data && data.snaps.some((s) => s.status !== "ok") && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {data.snaps.filter((s) => s.status !== "ok").map((s) => (<span key={s.scheme_code} className="flex items-center gap-2 text-sm">{shortName(s.fund_name)} <StatusPill status={s.status} /></span>))}
+          </div>
+        )}
+        <p className="mt-2 text-xs text-faint">1W compares each fund with its benchmark, or with its category average where no benchmark exists.</p>
+      </section>
+
+      {r && r.headlines.length > 0 && (
+        <section>
+          <h2 className="text-lg font-semibold">Key events this week</h2>
+          <ul className="card mt-3 divide-y divide-line">
+            {r.headlines.slice(0, 5).map((n, i) => (
+              <li key={i} className="px-4 py-3 sm:px-5">
+                <p className="text-[15px] leading-snug">{n.title}</p>
+                <p className="mt-1 text-xs text-muted">{n.source}{newsDate(n.published) && ` · ${newsDate(n.published)}`}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {goals && <GoalsCard goals={goals} />}
+
+      <div className="ledger max-w-3xl">
+        <SipCard />
+        <MoneyComparison />
       </div>
     </div>
   );

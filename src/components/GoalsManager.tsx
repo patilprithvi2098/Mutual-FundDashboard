@@ -61,7 +61,7 @@ export default function GoalsManager({ goals, sips, today, initialEdit }: { goal
         <GoalItem key={g.id} goal={g} today={today}
           action={editing !== g.id && (
             <button type="button" onClick={() => { setEditing(g.id); setEditForm(toForm(g)); setMsg(null); }}
-              className="mt-3.5 block cursor-pointer text-[15px] underline underline-offset-4 hover:no-underline" style={{ color: "oklch(0.8 0.1 240)" }}>Edit this goal</button>
+              className="mt-3.5 block cursor-pointer text-[15px] underline underline-offset-4 hover:no-underline" style={{ color: "var(--accent)" }}>Edit this goal</button>
           )}>
           {editing === g.id && (
             <>
@@ -90,7 +90,7 @@ export default function GoalsManager({ goals, sips, today, initialEdit }: { goal
         {note("list")}
       </div>
 
-      <form className="l-card mt-14 p-[18px]" onSubmit={async (e) => {
+      <form className="l-card mt-8 p-[18px]" onSubmit={async (e) => {
         e.preventDefault();
         await send("/api/sips", "PUT", sips.map((s) => ({ scheme_code: s.scheme_code, monthly_amount: Number(amounts[s.scheme_code] || 0) })), "sip", "SIP amounts saved.");
       }}>

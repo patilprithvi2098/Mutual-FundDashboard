@@ -13,7 +13,7 @@ const rows: { label: string; kind: Kind; cells: Partial<Record<(typeof cols)[num
   { label: "Rules engine", kind: "sys", cells: { Processing: "1W, 1M, YTD returns; benchmark and category gap; verdict" } },
   { label: "Gemini Flash", kind: "ai", cells: { Processing: "Explains market-wide vs fund-specific gap", Output: "3-sentence fund summaries, verdict reason" } },
   { label: "Supabase Postgres", kind: "sys", cells: { Context: "Fund list, past snapshots", Output: "Weekly snapshot stored" } },
-  { label: "Web dashboard", kind: "sys", cells: { Output: "Report, trends, manage funds" } },
+  { label: "Web dashboard", kind: "sys", cells: { Output: "Overview, weekly report, fund pages, insights, goals" } },
   { label: "Meera as reviewer", kind: "human", cells: { Processing: "Reviews fund if flagged 'Consider reviewing'" } },
 ];
 
@@ -27,7 +27,8 @@ const style: Record<Kind, string> = {
 export default function ComponentsMap() {
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Components map</h1>
+      <h1 className="text-[26px] font-semibold tracking-tight lg:text-[30px]">How it&apos;s built</h1>
+      <p className="max-w-[680px] text-[15px] text-muted">The components map submitted with the assignment: who or what triggers each step, and where the AI, the rules and the human sit.</p>
       <div className="overflow-x-auto rounded-2xl border border-line bg-card p-5">
         <div className="grid min-w-[860px] grid-cols-[170px_repeat(5,1fr)] gap-x-3">
           <div />
