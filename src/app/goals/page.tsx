@@ -1,18 +1,30 @@
 import GoalsManager from "@/components/GoalsManager";
-import { listGoals, listSips } from "@/lib/goals";
+import { goalsHeadline, paceOf } from "@/components/GoalItem";
+import { listGoals, listSips, RATE_HIGH, RATE_LOW } from "@/lib/goals";
 import { seedIfEmpty } from "@/lib/pipeline";
+import { todayIST } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
 
-export default async function GoalsPage() {
+export default async function GoalsPage({ searchParams }: { searchParams: Promise<{ edit?: string }> }) {
   await seedIfEmpty();
-  const [goals, sips] = await Promise.all([listGoals(), listSips()]);
+  const [goals, sips, sp] = await Promise.all([listGoals(), listSips(), searchParams]);
+  const today = todayIST();
+  const edit = Number(sp.edit);
   return (
-    <div className="space-y-4">
-      <a href="/" className="text-sm text-muted hover:text-ink">← Back to report</a>
-      <h1 className="text-2xl font-semibold">Goals and SIPs</h1>
-      <p className="text-muted">Set what you are saving for. The home page shows whether your SIPs are on pace for each goal.</p>
-      <GoalsManager goals={goals} sips={sips} />
+    <div className="ledger">
+      <div className="grid gap-x-16 gap-y-10 lg:grid-cols-[380px_minmax(0,1fr)]">
+        <header className="self-start lg:sticky lg:top-8">
+          <h1 className="text-[32px] font-semibold leading-[1.12] tracking-tight lg:text-[38px]">Your goals</h1>
+          <p className="l-soft mt-3.5 text-[17px] leading-relaxed [text-wrap:pretty] lg:text-lg">{goalsHeadline(goals.map((g) => paceOf(g, today).pace))}</p>
+          <p className="l-faint mt-4 text-xs leading-relaxed">
+            Projections assume an annual return of {RATE_LOW * 100}% to {RATE_HIGH * 100}%, compounded monthly, on money already saved and on each
+            goal&apos;s monthly saving. On pace means the goal is reached even at {RATE_LOW * 100}%, slightly behind means only at the upper end, and well
+            behind means short even at {RATE_HIGH * 100}%. Sample goals and amounts are illustrative data.
+          </p>
+        </header>
+        <GoalsManager goals={goals} sips={sips} today={today} initialEdit={goals.some((g) => g.id === edit) ? edit : null} />
+      </div>
     </div>
   );
 }

@@ -31,7 +31,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <div className="flex flex-wrap gap-x-4 gap-y-1 whitespace-nowrap sm:contents">
               <a href="/" className="text-muted hover:text-ink">Report</a>
               <a href="/history" className="text-muted hover:text-ink">Trends</a>
-              <a href="/funds" className="text-muted hover:text-ink">Manage funds</a>
+              <a href="/goals" className="text-muted hover:text-ink">Goals</a>
+              <a href="/funds" className="text-muted hover:text-ink">Funds</a>
               <a href="/components-map" className="text-muted hover:text-ink">Components map</a>
             </div>
           </nav>

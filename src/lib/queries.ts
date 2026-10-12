@@ -5,7 +5,7 @@ export type Snapshot = {
   ret_1w: string | null; ret_1m: string | null; ret_ytd: string | null;
   bench_1w: string | null; bench_1m: string | null; bench_ytd: string | null;
   cat_1w: string | null; cat_1m: string | null; cat_ytd: string | null; peer_count: number;
-  status: "ok" | "watch" | "review"; driver: string; summary: string;
+  status: "ok" | "watch" | "review"; driver: string; summary: string | null;
 };
 export type Report = {
   week_ending: string; generated_at: string; assessment: string; reason: string; market_summary: string | null;
