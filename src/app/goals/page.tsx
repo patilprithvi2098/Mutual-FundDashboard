@@ -1,6 +1,6 @@
 import GoalsManager from "@/components/GoalsManager";
 import { goalsHeadline, paceOf } from "@/components/GoalItem";
-import { listGoals, listSips, RATE_HIGH, RATE_LOW } from "@/lib/goals";
+import { listGoals, RATE_HIGH, RATE_LOW } from "@/lib/goals";
 import { seedIfEmpty } from "@/lib/pipeline";
 import { todayIST } from "@/lib/dates";
 import SipCard from "@/components/SipCard";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export default async function GoalsPage({ searchParams }: { searchParams: Promise<{ edit?: string }> }) {
   await seedIfEmpty();
-  const [goals, sips, sp] = await Promise.all([listGoals(), listSips(), searchParams]);
+  const [goals, sp] = await Promise.all([listGoals(), searchParams]);
   const today = todayIST();
   const edit = Number(sp.edit);
   return (
@@ -26,7 +26,7 @@ export default async function GoalsPage({ searchParams }: { searchParams: Promis
           </p>
         </header>
         <div>
-          <GoalsManager goals={goals} sips={sips} today={today} initialEdit={goals.some((g) => g.id === edit) ? edit : null} />
+          <GoalsManager goals={goals} today={today} initialEdit={goals.some((g) => g.id === edit) ? edit : null} />
           <h2 className="mt-10 text-lg font-semibold">Good to know</h2>
           <div className="mt-3"><SipCard /></div>
           <MoneyComparison />

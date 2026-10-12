@@ -1,22 +1,16 @@
-import { VERDICTS } from "@/lib/ledger";
 import { initials, plainCategory, shortName } from "@/lib/names";
 import { StatusPill, pctS, tone } from "./ui";
 import Tip from "./Tip";
 import VerdictPills from "./VerdictPills";
 import type { ReactNode } from "react";
 
-const HUE = ["var(--good)", "var(--warn)", "var(--bad)"];
 
-/** The verdict with all three possible states shown and explained on tap. */
+/** The verdict card: three tappable verdicts, this week's headline and reason. */
 export function AssessmentCard({ assessment, reason, children }: { assessment: string; reason: string; children?: ReactNode }) {
-  const active = VERDICTS.indexOf(assessment as (typeof VERDICTS)[number]);
   return (
     <section className="card p-5 lg:p-6">
       <p className="eyebrow">This week&apos;s verdict</p>
-      <div className="mt-3"><VerdictPills assessment={assessment} /></div>
-      <h2 className="mt-5 text-[24px] font-semibold leading-tight tracking-tight lg:text-[28px]" style={active > 0 ? { color: HUE[active] } : undefined}>{assessment}</h2>
-      <p className="mt-2.5 text-[16px] leading-relaxed text-soft [text-wrap:pretty]">{reason}</p>
-      {children}
+      <div className="mt-3"><VerdictPills assessment={assessment} reason={reason}>{children}</VerdictPills></div>
     </section>
   );
 }
