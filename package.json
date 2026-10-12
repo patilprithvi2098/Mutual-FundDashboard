@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "backfill": "node --env-file=.env.local --import tsx scripts/backfill.ts"
+    "backfill": "tsx --env-file=.env.local scripts/backfill-snapshots.ts"
   },
   "dependencies": {
     "fast-xml-parser": "^5.11.2",

@@ -105,11 +105,11 @@ async function indexSeries(sym: string): Promise<Point[]> {
   return rows.map((r) => ({ date: r.close_date, value: Number(r.close) }));
 }
 
-type Status = "ok" | "watch" | "review";
+export type Status = "ok" | "watch" | "review";
 const f1 = (n: number | null) => (n == null ? null : Math.round(n * 100) / 100);
 const rnd = (r: Returns | null) => (r ? { w: f1(r.w), m: f1(r.m), ytd: f1(r.ytd) } : null);
 
-function judge(fund: Returns, bench: Returns | null, cat: Returns | null, debt: boolean) {
+export function judge(fund: Returns, bench: Returns | null, cat: Returns | null, debt: boolean) {
   const k = debt ? 0.15 : 1;
   const diffs = [bench, cat].map((x) => (x && fund.m != null && x.m != null ? fund.m - x.m : null)).filter((x): x is number => x != null);
   const worst = diffs.length ? Math.min(...diffs) : null;
