@@ -42,7 +42,7 @@ export default async function Trends() {
   const { rows: split, configured, total } = sipSplit(funds, Object.fromEntries(sips.map((s) => [s.scheme_code, s.monthly_amount])));
   const biggest = [...split].sort((a, b) => b.pct - a.pct)[0];
   const splitSentence = configured
-    ? `${biggest.name} receives the largest share of your monthly SIPs, at ${biggest.pct} percent. These are sample SIP amounts, which you can change on the Goals page.`
+    ? `${shortName(biggest.name)} receives the largest share of your monthly SIPs, at ${biggest.pct} percent. These are sample SIP amounts, which you can change on the Goals page.`
     : "Your funds are shown with equal shares here, because your SIP amounts have not been added yet. You can add them on the Goals page.";
   const shade = ["#3730a3", "#6366f1", "#a5b4fc", "#c7d2fe", "#e0e7ff", "#94a3b8", "#cbd5e1"];
 

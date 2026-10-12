@@ -45,7 +45,7 @@ export default async function Overview() {
         <p className="mt-1 text-[15px] text-muted">Here is how your funds are doing.</p>
       </header>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
         <section className="card p-5 lg:p-6">
           <p className="eyebrow">Portfolio value</p>
           <CountUp value={value} className="num mt-2 block text-[34px] font-semibold leading-none tracking-tight lg:text-[40px]" />

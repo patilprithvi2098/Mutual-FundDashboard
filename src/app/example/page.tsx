@@ -1,6 +1,7 @@
 import { q } from "@/lib/db";
 import { VERDICTS, longDate } from "@/lib/ledger";
 import FundRow from "@/components/FundRow";
+import { shortName } from "@/lib/names";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Example warning" };
@@ -29,7 +30,7 @@ export default async function ExamplePage() {
             <p className="font-semibold">This is what a warning looks like.</p>
             <p className="l-soft mt-2 [text-wrap:pretty]">
               Every fund has been on track for weeks, so the real report has not needed to warn Meera yet. This page copies the report for the week
-              to {longDate(ex.based_on_week)} and lowers {ex.stressed_fund}&apos;s returns so it trails its benchmark by {ex.shift.m} points over the month
+              to {longDate(ex.based_on_week)} and lowers {shortName(ex.stressed_fund)}&apos;s returns so it trails its benchmark by {ex.shift.m} points over the month
               and {ex.shift.w} points over the week. The real rules then flag it, and Gemini Flash ({ex.model}) writes the explanation.
               The other funds keep their real numbers.
             </p>
@@ -56,7 +57,7 @@ export default async function ExamplePage() {
               <span className="text-right">Benchmark</span>
             </div>
             {ex.funds.map((f) => (
-              <FundRow key={f.scheme_code} name={f.stressed ? `${f.fund_name} (simulated)` : f.fund_name} status={f.status}
+              <FundRow key={f.scheme_code} name={f.stressed ? `${shortName(f.fund_name)} (simulated)` : shortName(f.fund_name)} status={f.status}
                 fund1w={f.ret_1w == null ? null : String(f.ret_1w)} bench1w={f.bench_1w == null ? null : String(f.bench_1w)}
                 summary={f.summary ?? "A written summary is not available for this fund."} />
             ))}

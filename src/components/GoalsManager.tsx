@@ -1,4 +1,5 @@
 "use client";
+import { shortName } from "@/lib/names";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import GoalItem from "@/components/GoalItem";
@@ -95,11 +96,11 @@ export default function GoalsManager({ goals, sips, today, initialEdit }: { goal
         await send("/api/sips", "PUT", sips.map((s) => ({ scheme_code: s.scheme_code, monthly_amount: Number(amounts[s.scheme_code] || 0) })), "sip", "SIP amounts saved.");
       }}>
         <h2 className="text-base font-semibold">Monthly SIP per fund <span className="l-watch-text ml-1 font-mono text-[10px] font-medium uppercase tracking-[0.06em]">Sample data</span></h2>
-        <p className="l-muted mt-1 text-sm leading-relaxed">These amounts are illustrative and are not linked to any real account. They set the split shown on the Trends page.</p>
+        <p className="l-muted mt-1 text-sm leading-relaxed">These amounts are illustrative and are not linked to any real account. They set the split shown on the Insights page and the sample portfolio value on the Overview.</p>
         <div className="mt-3">
           {sips.map((s) => (
             <div key={s.scheme_code} className="flex items-center justify-between gap-3 border-t l-line py-3">
-              <label htmlFor={`sip-${s.scheme_code}`} className="min-w-0 text-sm">{s.name}</label>
+              <label htmlFor={`sip-${s.scheme_code}`} className="min-w-0 text-sm">{shortName(s.name)}</label>
               <span className="flex shrink-0 items-center gap-1 text-sm">
                 <span className="l-muted">₹</span>
                 <input id={`sip-${s.scheme_code}`} type="number" inputMode="numeric" min={0} step={500} value={amounts[s.scheme_code] ?? ""}

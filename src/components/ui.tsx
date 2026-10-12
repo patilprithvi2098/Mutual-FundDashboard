@@ -5,7 +5,7 @@ export const fmt = (v: string | number | null | undefined, plus = true) => {
   const n = Number(v);
   return `${plus && n > 0 ? "+" : ""}${n.toFixed(2)}%`;
 };
-export const tone = (n: number | string | null | undefined) => (n == null ? "text-muted" : Number(n) >= 0 ? "text-good" : "text-bad");
+export const tone = (n: number | string | null | undefined) => (n == null ? "text-muted" : Math.abs(Number(n)) < 0.05 ? "text-soft" : Number(n) > 0 ? "text-good" : "text-bad");
 
 const PILL: Record<string, string> = {
   ok: "bg-good-soft text-good",
