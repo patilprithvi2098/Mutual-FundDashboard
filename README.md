@@ -6,7 +6,7 @@ MESA Cohort C4, AI and its Applications, Section 1 final examination, Problem St
 
 **Repo:** https://github.com/patilprithvi2098/Mutual-FundDashboard
 
-**Live URL:** _add your Vercel URL here_
+**Live URL:** https://mutual-fund-dashboard-patilprithvi2098-2548s-projects.vercel.app
 
 ## What it does
 
