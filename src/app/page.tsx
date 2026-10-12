@@ -1,35 +1,20 @@
-import { latestReport, navTail } from "@/lib/queries";
+import { latestReport } from "@/lib/queries";
 import { seedIfEmpty } from "@/lib/pipeline";
-import { StatusPill, Sparkline, fmt, tone } from "@/components/ui";
+import { VERDICTS, longDate, shortDate, marketParagraph } from "@/lib/ledger";
+import FundRow from "@/components/FundRow";
 import RunButton from "@/components/RunButton";
 
 export const dynamic = "force-dynamic";
 
-const banner: Record<string, string> = {
-  "No action needed": "border-emerald-200 bg-emerald-50 text-good",
-  "One fund worth watching": "border-amber-200 bg-amber-50 text-warn",
-  "Consider reviewing your allocation": "border-red-200 bg-red-50 text-bad",
-};
-const driverText: Record<string, string> = {
-  "market-wide": "Moved with the market", "fund-specific": "Fund-specific move", outperforming: "Beating its benchmark", "in-line": "In line with benchmark",
-};
-
-function Row({ label, f, b, c }: { label: string; f: string | null; b: string | null; c: string | null }) {
-  const d = (x: string | null) => (f != null && x != null ? Number(f) - Number(x) : null);
-  return (
-    <tr className="border-t border-line">
-      <td className="py-1.5 text-muted">{label}</td>
-      <td className={`num py-1.5 text-right font-medium ${tone(f == null ? null : Number(f))}`}>{fmt(f)}</td>
-      <td className="num py-1.5 text-right">{fmt(b)}</td>
-      <td className="num py-1.5 text-right">{fmt(c)}</td>
-      <td className={`num py-1.5 text-right ${tone(d(b))}`}>{d(b) == null ? "–" : `${d(b)! > 0 ? "+" : ""}${d(b)!.toFixed(1)}pp`}</td>
-    </tr>
-  );
-}
-
 export default async function Home() {
-  let data = null; let err = "";
-  try { await seedIfEmpty(); data = await latestReport(); } catch (e) { err = (e as Error).message; }
+  let data = null;
+  let err = "";
+  try {
+    await seedIfEmpty();
+    data = await latestReport();
+  } catch (e) {
+    err = (e as Error).message;
+  }
   if (err) return <p className="rounded-lg border border-red-200 bg-red-50 p-4 text-bad">Could not reach the database: {err}</p>;
   if (!data)
     return (
@@ -39,79 +24,61 @@ export default async function Home() {
         <RunButton />
       </div>
     );
+
   const { report: r, snaps } = data;
-  const sparks = await Promise.all(snaps.map((s) => navTail(s.scheme_code)));
-  const generated = new Date(r.generated_at).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" });
+  const navAsOf = snaps.map((s) => s.as_of).sort().at(-1) ?? r.week_ending;
+  const active = VERDICTS.indexOf(r.assessment as (typeof VERDICTS)[number]);
+
   return (
-    <div className="space-y-8">
-      <div>
-        <p className="text-sm text-muted">Week ending Saturday {r.week_ending} · generated {generated} IST</p>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight">Good morning, Meera.</h1>
-      </div>
+    <div className="ledger">
+      <div className="grid gap-x-16 gap-y-14 lg:grid-cols-[380px_minmax(0,1fr)]">
+        <header className="self-start lg:sticky lg:top-8">
+          <p className="font-mono text-xs tracking-[0.08em] l-faint">SATURDAY REPORT · {shortDate(r.week_ending)}</p>
+          <div className="mt-9 flex gap-1.5">
+            {VERDICTS.map((v, i) => (
+              <div key={v} style={i === active ? { background: ["var(--l-ok)", "var(--l-watch)", "var(--l-review)"][i] } : undefined} className={`h-1 flex-1 rounded-sm ${i === active ? "" : "l-bar-off"}`} />
+            ))}
+          </div>
+          <div className="mt-2 flex gap-1.5 text-[11px] leading-snug">
+            {VERDICTS.map((v, i) => (
+              <div key={v} style={i === active ? { color: ["var(--l-ok)", "var(--l-watch)", "var(--l-review)"][i] } : undefined} className={`flex-1 ${i === active ? "font-medium" : "l-faint"}`}>{v}</div>
+            ))}
+          </div>
+          <h1 className="mt-7 text-[32px] font-semibold leading-[1.12] tracking-tight lg:text-[38px]">{r.assessment}</h1>
+          <p className="mt-3.5 text-[17px] leading-relaxed l-soft [text-wrap:pretty] lg:text-lg">{r.reason}</p>
+          <p className="mt-4 font-mono text-xs l-faint">Updated with NAV as of {longDate(navAsOf)}</p>
+        </header>
 
-      <section className={`rounded-2xl border p-5 ${banner[r.assessment] ?? "border-line bg-card"}`}>
-        <p className="text-xs font-medium uppercase tracking-wide opacity-80">Overall portfolio assessment</p>
-        <p className="mt-1 text-2xl font-semibold">{r.assessment}</p>
-        <p className="mt-2 text-ink">{r.reason}</p>
-      </section>
-
-      <section className="rounded-2xl border border-line bg-card p-5">
-        <h2 className="font-semibold">The market this week</h2>
-        {r.market_summary && <p className="mt-1 text-muted">{r.market_summary}</p>}
-        <div className="mt-3 grid gap-3 sm:grid-cols-3">
-          {r.market.map((m) => (
-            <div key={m.index} className="rounded-lg bg-bg p-3">
-              <p className="text-xs text-muted">{m.index}</p>
-              <p className={`num text-xl font-semibold ${tone(m.w)}`}>{fmt(m.w)}</p>
-              <p className="num text-xs text-muted">1M {fmt(m.m)} · YTD {fmt(m.ytd)}</p>
+        <div>
+          <section>
+            <h2 className="text-lg font-semibold lg:text-xl">Your funds</h2>
+            <p className="mt-1.5 text-sm leading-relaxed l-muted lg:text-[15px]">
+              Each fund is shown next to the index it is measured against, for the past week.
+            </p>
+            <div className="mt-5 grid grid-cols-[minmax(0,1fr)_64px_76px] gap-x-3 pb-2 font-mono text-[11px] uppercase tracking-[0.06em] l-faint lg:grid-cols-[minmax(0,1fr)_150px_80px_100px] lg:gap-x-4">
+              <span />
+              <span className="hidden lg:block" />
+              <span className="text-right">Fund</span>
+              <span className="text-right">Benchmark</span>
             </div>
-          ))}
+            {snaps.map((s) => (
+              <FundRow key={s.scheme_code} name={s.fund_name} status={s.status} fund1w={s.ret_1w} bench1w={s.bench_1w} summary={s.summary} />
+            ))}
+            <div className="border-t l-line" />
+          </section>
+
+          <section className="mt-14">
+            <h2 className="text-lg font-semibold lg:text-xl">The market this week</h2>
+            <p className="mt-3 max-w-[620px] text-base leading-[1.65] l-soft [text-wrap:pretty] lg:text-[17px]">
+              {marketParagraph(r.market_summary, r.market)}
+            </p>
+          </section>
+
+          <div className="mt-14 flex flex-wrap items-center justify-between gap-3 text-xs l-faint">
+            <span>{r.ai_used ? `Written by ${r.model}` : "AI commentary was unavailable; showing rule-based text."}</span>
+            <RunButton label="Regenerate now" />
+          </div>
         </div>
-      </section>
-
-      <section className="space-y-4">
-        {snaps.map((s, i) => (
-          <article key={s.scheme_code} className="rounded-2xl border border-line bg-card p-5">
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div>
-                <h3 className="font-semibold">{s.fund_name}</h3>
-                <p className="text-xs text-muted">{s.category} · NAV ₹{Number(s.nav).toFixed(2)} as of {s.as_of}</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <Sparkline data={sparks[i]} />
-                <StatusPill status={s.status} />
-              </div>
-            </div>
-            <p className="mt-3 leading-relaxed">{s.summary}</p>
-            <p className="mt-2 text-xs text-muted">{driverText[s.driver] ?? s.driver}</p>
-            <table className="mt-3 w-full text-sm">
-              <thead><tr className="text-xs text-muted">
-                <th className="text-left font-normal"></th><th className="text-right font-normal">Fund</th>
-                <th className="text-right font-normal">{s.benchmark_name ?? "Benchmark n/a"}</th>
-                <th className="text-right font-normal">Category avg{s.peer_count ? ` (${s.peer_count})` : ""}</th>
-                <th className="text-right font-normal">vs benchmark</th></tr></thead>
-              <tbody>
-                <Row label="1 week" f={s.ret_1w} b={s.bench_1w} c={s.cat_1w} />
-                <Row label="1 month" f={s.ret_1m} b={s.bench_1m} c={s.cat_1m} />
-                <Row label="Year to date" f={s.ret_ytd} b={s.bench_ytd} c={s.cat_ytd} />
-              </tbody>
-            </table>
-          </article>
-        ))}
-      </section>
-
-      {r.headlines.length > 0 && (
-        <section className="rounded-2xl border border-line bg-card p-5">
-          <h2 className="font-semibold">Headlines behind the commentary</h2>
-          <ul className="mt-2 space-y-1 text-sm text-muted">
-            {r.headlines.slice(0, 8).map((h, i) => <li key={i}>{h.title} <span className="text-xs">({h.source}, {h.published})</span></li>)}
-          </ul>
-        </section>
-      )}
-
-      <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-muted">
-        <span>{r.ai_used ? `Written by ${r.model}` : "AI commentary was unavailable; showing rule-based text."}</span>
-        <RunButton label="Regenerate now" />
       </div>
     </div>
   );

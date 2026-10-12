@@ -11,3 +11,20 @@
 }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-geist-sans), system-ui, sans-serif; }
 .num { font-variant-numeric: tabular-nums; }
+
+/* Ledger look. Applies only when a page renders a .ledger element. */
+body:has(.ledger) { background: oklch(0.2 0.012 255); color: oklch(0.94 0.005 255); }
+body:has(.ledger) header.border-b { background: oklch(0.17 0.012 255); border-color: oklch(0.32 0.012 255); }
+body:has(.ledger) header.border-b a { color: oklch(0.78 0.008 255); }
+body:has(.ledger) header.border-b a:hover { color: oklch(0.98 0.004 255); }
+body:has(.ledger) footer { color: oklch(0.68 0.01 255); }
+.ledger { --l-ok: oklch(0.8 0.12 155); --l-watch: oklch(0.82 0.12 80); --l-review: oklch(0.76 0.13 30); }
+.ledger .l-ok { color: var(--l-ok); } .ledger .l-watch { color: var(--l-watch); } .ledger .l-review { color: var(--l-review); }
+.ledger .l-watch-text { color: var(--l-watch); }
+.ledger .l-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.ledger .l-line { border-color: oklch(0.32 0.012 255); }
+.ledger .l-soft { color: oklch(0.86 0.006 255); }
+.ledger .l-muted { color: oklch(0.76 0.008 255); }
+.ledger .l-faint { color: oklch(0.7 0.01 255); }
+.ledger .l-bar-on { background: var(--l-watch); } .ledger .l-bar-off { background: oklch(0.36 0.012 255); }
+.ledger button { color: inherit; }
