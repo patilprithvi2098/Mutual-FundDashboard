@@ -55,6 +55,20 @@ Rows are the components; columns are the stage of the flow. Colours: People, AI,
 - **Database.** The brief mentions Supabase; this build uses Neon. The code is plain Postgres (`pg`), so switching is a connection-string change.
 - **Public write access.** The fund form and "generate now" button have no login, with a 10-fund cap and a 60-second cooldown. Fine for a demo, add auth before real use.
 
+## Backfilling history
+
+`scripts/backfill.ts` rebuilds 8 to 12 weeks (default 10) of weekly snapshots from the stored NAV and index history, so the Trends page has data before the weekly cron has run that many times.
+
+```bash
+npm run backfill              # 10 weeks
+npm run backfill -- --weeks 12
+npm run backfill -- --dry-run # print what would be written
+```
+
+- **Idempotent.** Weeks are upserted, so re-running changes nothing. Any week that already has a real report is skipped. Backfilled reports are marked `model = 'backfill'`.
+- **Same rules.** Returns, benchmark and category gaps, status and the 3-week "review" streak use the same thresholds as the live report.
+- **Limits.** There is no AI commentary and no headlines for backfilled weeks (news feeds only cover the last week), so they carry rule-based text. Category averages use today's peer set.
+
 ## Run locally
 
 ```bash

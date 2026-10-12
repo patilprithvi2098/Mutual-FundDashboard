@@ -8,7 +8,7 @@ const rows: { label: string; kind: Kind; cells: Partial<Record<(typeof cols)[num
   { label: "Vercel Cron", kind: "sys", cells: { Trigger: "Daily NAV pull; Saturday 8:00 IST report" } },
   { label: "Fund form", kind: "sys", cells: { Input: "Validates code, adds or removes fund" } },
   { label: "MF data (mfapi.in)", kind: "sys", cells: { Input: "Daily NAV for each fund", Context: "NAVs of category peers" } },
-  { label: "Index data (Yahoo Finance)", kind: "sys", cells: { Context: "Nifty 50, Midcap 150, Smallcap 100" } },
+  { label: "Index data (Yahoo Finance)", kind: "sys", cells: { Context: "Nifty 50, Midcap 150, Smallcap 250" } },
   { label: "News (Google News RSS)", kind: "sys", cells: { Context: "Week's market and macro headlines" } },
   { label: "Rules engine", kind: "sys", cells: { Processing: "1W, 1M, YTD returns; benchmark and category gap; verdict" } },
   { label: "Gemini Flash", kind: "ai", cells: { Processing: "Explains market-wide vs fund-specific gap", Output: "3-sentence fund summaries, verdict reason" } },
