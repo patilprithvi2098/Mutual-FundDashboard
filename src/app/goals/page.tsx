@@ -3,6 +3,8 @@ import { goalsHeadline, paceOf } from "@/components/GoalItem";
 import { listGoals, listSips, RATE_HIGH, RATE_LOW } from "@/lib/goals";
 import { seedIfEmpty } from "@/lib/pipeline";
 import { todayIST } from "@/lib/dates";
+import SipCard from "@/components/SipCard";
+import MoneyComparison from "@/components/MoneyComparison";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +25,12 @@ export default async function GoalsPage({ searchParams }: { searchParams: Promis
             behind means short even at {RATE_HIGH * 100}%. Sample goals and amounts are illustrative data.
           </p>
         </header>
-        <GoalsManager goals={goals} sips={sips} today={today} initialEdit={goals.some((g) => g.id === edit) ? edit : null} />
+        <div>
+          <GoalsManager goals={goals} sips={sips} today={today} initialEdit={goals.some((g) => g.id === edit) ? edit : null} />
+          <h2 className="mt-10 text-lg font-semibold">Good to know</h2>
+          <div className="mt-3"><SipCard /></div>
+          <MoneyComparison />
+        </div>
       </div>
     </div>
   );

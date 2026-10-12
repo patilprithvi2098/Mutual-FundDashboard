@@ -30,7 +30,7 @@ export default function FundManager({ funds }: { funds: F[] }) {
         <div className="mt-3 flex flex-col gap-2 sm:flex-row">
           <input id="code" value={code} onChange={(e) => setCode(e.target.value)} inputMode="numeric" placeholder="Scheme code"
             className="min-h-[44px] w-full rounded-xl border border-line bg-card px-3 text-[15px] sm:w-56" />
-          <button disabled={busy || !code} className="min-h-[44px] rounded-xl bg-accent px-5 text-[15px] font-medium text-white disabled:opacity-60">{busy ? "Checking…" : "Add fund"}</button>
+          <button disabled={busy || !code} className="min-h-[44px] rounded-xl bg-accent px-5 text-[15px] font-medium text-on-accent disabled:opacity-60">{busy ? "Checking…" : "Add fund"}</button>
         </div>
         {msg && (
           <p role="status" className={`mt-3 rounded-xl px-3 py-2 text-sm ${msg.ok ? "bg-good-soft text-good" : "bg-bad-soft text-bad"}`}>{msg.t}</p>

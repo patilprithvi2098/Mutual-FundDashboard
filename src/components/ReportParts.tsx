@@ -2,27 +2,19 @@ import { VERDICTS } from "@/lib/ledger";
 import { initials, plainCategory, shortName } from "@/lib/names";
 import { StatusPill, pctS, tone } from "./ui";
 import Tip from "./Tip";
+import VerdictPills from "./VerdictPills";
 import type { ReactNode } from "react";
 
 const HUE = ["var(--good)", "var(--warn)", "var(--bad)"];
-const SOFT = ["var(--good-soft)", "var(--warn-soft)", "var(--bad-soft)"];
 
-/** The verdict with all three possible states shown, the active one coloured. */
+/** The verdict with all three possible states shown and explained on tap. */
 export function AssessmentCard({ assessment, reason, children }: { assessment: string; reason: string; children?: ReactNode }) {
   const active = VERDICTS.indexOf(assessment as (typeof VERDICTS)[number]);
   return (
     <section className="card p-5 lg:p-6">
       <p className="eyebrow">This week&apos;s verdict</p>
-      <ol className="mt-3 grid grid-cols-3 gap-1.5" aria-label="The three possible verdicts">
-        {VERDICTS.map((v, i) => (
-          <li key={v} aria-current={i === active ? "true" : undefined}
-            className="rounded-lg px-2 py-2 text-center text-[11px] font-medium leading-snug sm:text-xs"
-            style={i === active ? { background: SOFT[i], color: HUE[i], boxShadow: `inset 0 0 0 1px ${HUE[i]}` } : { background: "var(--wash)", color: "var(--faint)" }}>
-            {v}
-          </li>
-        ))}
-      </ol>
-      <h2 className="mt-5 text-[24px] font-semibold leading-tight tracking-tight lg:text-[28px]" style={active >= 0 ? { color: active === 0 ? "var(--ink)" : HUE[active] } : undefined}>{assessment}</h2>
+      <div className="mt-3"><VerdictPills assessment={assessment} /></div>
+      <h2 className="mt-5 text-[24px] font-semibold leading-tight tracking-tight lg:text-[28px]" style={active > 0 ? { color: HUE[active] } : undefined}>{assessment}</h2>
       <p className="mt-2.5 text-[16px] leading-relaxed text-soft [text-wrap:pretty]">{reason}</p>
       {children}
     </section>

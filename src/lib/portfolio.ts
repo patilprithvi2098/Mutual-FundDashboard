@@ -89,3 +89,14 @@ export async function loadPortfolio() {
   const navs = await navSeries(funds.map((f) => f.scheme_code));
   return { funds, sipByCode, navs, ...simulateSips(navs, sipByCode) };
 }
+
+/** Recent closes per index symbol, for sparklines. */
+export async function indexTails(symbols: string[], days = 60) {
+  const out = new Map<string, number[]>(symbols.map((s) => [s, []]));
+  if (!symbols.length) return out;
+  const rows = await q<{ s: string; v: string }>(
+    `select symbol s, close::text v from (select symbol, close, close_date, row_number() over (partition by symbol order by close_date desc) rn
+       from index_history where symbol = any($1::text[])) t where rn <= $2 order by close_date`, [symbols, days]);
+  for (const r of rows) out.get(r.s)?.push(Number(r.v));
+  return out;
+}

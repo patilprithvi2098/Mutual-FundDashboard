@@ -1,6 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import ThemeToggle from "./ThemeToggle";
 
 const I = (d: ReactNode) => (
   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>{d}</svg>
@@ -42,7 +43,7 @@ function isActive(path: string, href: string, also: string[] = []) {
 export function Brand() {
   return (
     <a href="/" className="flex items-center gap-2.5">
-      <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-accent text-white" aria-hidden>
+      <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-accent text-on-accent" aria-hidden>
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
           <path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14Z" /><path d="M5 19 13 11" />
         </svg>
@@ -70,7 +71,7 @@ export function Sidebar() {
     <aside className="sticky top-0 hidden h-screen w-60 flex-none flex-col border-r border-line bg-card px-4 py-6 lg:flex">
       <div className="px-2"><Brand /></div>
       <nav className="mt-8 flex flex-col gap-1" aria-label="Main">{MAIN.map((m) => link(m.href, m.label, m.icon))}</nav>
-      <div className="mt-auto border-t border-line pt-4">{link("/components-map", "How it's built", ICONS.map)}</div>
+      <div className="mt-auto border-t border-line pt-4">{link("/components-map", "How it's built", ICONS.map)}<div className="mt-3 px-1"><ThemeToggle /></div></div>
     </aside>
   );
 }
