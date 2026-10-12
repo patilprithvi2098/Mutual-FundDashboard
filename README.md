@@ -55,7 +55,7 @@ Rows are the components; columns are the stage of the flow. Colours: People, AI,
 - **Category average for the Nasdaq fund** rests on a single peer fund, because few Nasdaq 100 funds of funds exist in India. The other categories use 8 peers.
 - **History.** The latest week was written by Gemini. The earlier weeks were rebuilt from stored NAV history by the same rules engine (see Backfilling history), and the Trends page says so.
 - **Scheduled runs.** The daily ingest and the Saturday report run on Vercel Cron. Both endpoints were tested by calling them with the secret; the first unattended Saturday run happens after submission.
-- **Public write access.** The fund form and goals have no login, with a 10-fund cap and a 60-second cooldown on report generation. Fine for a demo; add auth before real use.
+- **Public write access.** The fund form and goals have no login (the brief asks for an open form), with a 10-fund cap. Regenerating the report needs an admin passcode and has a 60-second cooldown. Add real auth before real use.
 
 ## Backfilling history
 
@@ -80,6 +80,7 @@ The project started on Neon and was moved with `scripts/copy-to-supabase.ts` (`n
 
 ## Beyond the brief
 
+- **What a warning looks like** (`/example`). Every real week so far is "No action needed", so this page shows the amber state: it copies this week's report, lowers one fund's returns below its benchmark, and runs the real rules and the real Gemini prompt on it. Built once by `npm run build-example` and saved, so opening it never calls Gemini. It is clearly labelled as simulated.
 - A rebased chart per fund (fund against benchmark, 1 week, 1 month or year to date) with a one-sentence reading, and "?" explanations for terms like benchmark and category average.
 - A Goals page: targets with saved-so-far and a monthly saving, marked on pace, slightly behind or well behind using a future-value projection at an assumed 8% to 12% annual return. Goals and SIP amounts are sample data and are labelled as such.
 - "How SIPs work" and "Where else can money go?" cards. The second compares equity, debt, gold, real estate and fixed deposits with rough historical ranges and states that it is not financial advice.
@@ -98,6 +99,7 @@ npm run dev                  # http://localhost:3000
 | `GEMINI_API_KEY` | Google AI Studio key |
 | `GEMINI_MODEL` | Optional, defaults to `gemini-3.8-flash` |
 | `CRON_SECRET` | Any long random string; Vercel Cron sends it as a Bearer token |
+| `ADMIN_PASSCODE` | Optional. When set, the "Regenerate now" button asks for it, so visitors cannot spend the Gemini quota |
 
 The first page load seeds five funds: UTI Nifty 50 Index (120716), HDFC Mid Cap (118989), Nippon India Small Cap (118778), HDFC Short Term (119016) and Axis Nasdaq 100 FoF (150751). Click "Generate report now" for the first report.
 

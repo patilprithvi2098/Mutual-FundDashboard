@@ -60,6 +60,7 @@ export default async function Home() {
           <h1 className="mt-7 text-[32px] font-semibold leading-[1.12] tracking-tight lg:text-[38px]">{r.assessment}</h1>
           <p className="l-soft mt-3.5 text-[17px] leading-relaxed [text-wrap:pretty] lg:text-lg">{r.reason}</p>
           <p className="l-faint mt-4 font-mono text-xs">Updated with NAV as of {longDate(navAsOf)}</p>
+          <a href="/example" className="mt-3 inline-block text-sm underline underline-offset-4 hover:no-underline" style={{ color: "oklch(0.8 0.1 240)" }}>See what a warning looks like</a>
           {!r.ai_used && <p className="l-chip mt-3">Written by our backup rules</p>}
         </header>
 

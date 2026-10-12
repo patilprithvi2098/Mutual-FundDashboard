@@ -7,7 +7,14 @@ export default function RunButton({ label = "Generate report now" }: { label?: s
   async function run() {
     setBusy(true); setMsg("Fetching NAVs, indices and news, then asking Gemini. This takes up to a minute…");
     try {
-      const r = await fetch("/api/report", { method: "POST" });
+      const post = (code?: string) => fetch("/api/report", { method: "POST", headers: code ? { "x-admin-passcode": code } : {} });
+      let r = await post(sessionStorage.getItem("adminPasscode") ?? undefined);
+      if (r.status === 401) {
+        const code = window.prompt("Regenerating the report uses the Gemini quota, so it needs the admin passcode.");
+        if (!code) { setMsg("Regeneration cancelled."); setBusy(false); return; }
+        r = await post(code);
+        if (r.ok) sessionStorage.setItem("adminPasscode", code);
+      }
       const j = await r.json();
       if (!r.ok) throw new Error(j.error || "Failed");
       location.reload();
