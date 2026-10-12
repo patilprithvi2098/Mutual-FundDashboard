@@ -3,6 +3,9 @@ import { seedIfEmpty } from "@/lib/pipeline";
 import { VERDICTS, longDate, shortDate, marketParagraph } from "@/lib/ledger";
 import FundRow from "@/components/FundRow";
 import RunButton from "@/components/RunButton";
+import GoalsCard from "@/components/GoalsCard";
+import MoneyComparison from "@/components/MoneyComparison";
+import { listGoals, listSips } from "@/lib/goals";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +29,8 @@ export default async function Home() {
     );
 
   const { report: r, snaps } = data;
+  // Goals are separate from the report; if they fail to load, the report still renders.
+  const goalsData = await Promise.all([listGoals(), listSips()]).catch(() => null);
   const navAsOf = snaps.map((s) => s.as_of).sort().at(-1) ?? r.week_ending;
   const active = VERDICTS.indexOf(r.assessment as (typeof VERDICTS)[number]);
 
@@ -73,6 +78,10 @@ export default async function Home() {
               {marketParagraph(r.market_summary, r.market)}
             </p>
           </section>
+
+          {goalsData && <GoalsCard goals={goalsData[0]} sips={goalsData[1]} />}
+
+          <MoneyComparison />
 
           <div className="mt-14 flex flex-wrap items-center justify-between gap-3 text-xs l-faint">
             <span>{r.ai_used ? `Written by ${r.model}` : "AI commentary was unavailable; showing rule-based text."}</span>
