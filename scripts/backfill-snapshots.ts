@@ -7,7 +7,7 @@
  */
 import { q, pool } from "../src/lib/db";
 import { activeFunds, ingestAll, judge, seedIfEmpty, type Status } from "../src/lib/pipeline";
-import { computeReturns, meanReturns, valueOnOrBefore, type Point, type Returns } from "../src/lib/returns";
+import { computeReturns, meanReturns, valueOnOrBefore, type Point } from "../src/lib/returns";
 import { isDebt } from "../src/lib/benchmarks";
 import { addDays, todayIST, weekEnding } from "../src/lib/dates";
 
