@@ -3,8 +3,8 @@ import { PageHead } from "@/components/ui";
 export const metadata = { title: "More · Meera's Wealth" };
 
 const LINKS = [
-  { href: "/goals", title: "Goals", text: "Savings goals with SIP projections and sample SIP amounts." },
-  { href: "/funds", title: "Manage funds", text: "Add or remove a fund by its scheme code." },
+  { href: "/goals", title: "Goals", text: "Savings goals with SIP projections." },
+  { href: "/funds", title: "Manage funds", text: "Add or remove a fund, and set monthly SIP amounts." },
   { href: "/example", title: "Example warning", text: "What the report looks like when a fund needs attention." },
   { href: "/components-map", title: "How it's built", text: "The components map and deviations from the brief." },
 ];

@@ -13,7 +13,7 @@ export default async function FundsList() {
   const holdBy = new Map(pf.holdings.map((h) => [h.scheme_code, h]));
   return (
     <div className="space-y-6">
-      <PageHead title="My funds">Tap a fund for its returns, chart and weekly summaries. Values are the sample SIPs priced at real NAVs.</PageHead>
+      <PageHead title="My funds">Tap a fund for its returns, chart and weekly summaries.</PageHead>
       <div className="grid gap-4 md:grid-cols-2">
         {pf.funds.map((f) => {
           const s = snapBy.get(f.scheme_code), h = holdBy.get(f.scheme_code);

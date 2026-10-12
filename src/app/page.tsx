@@ -85,11 +85,11 @@ export default async function Overview() {
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
         <Tile label="Portfolio value" value={<CountUp value={value} />} icon={ICON.wallet} tint="var(--accent)"
-          delta={wk == null ? "Sample SIPs at real NAVs" : <><span className={`num font-medium ${tone(wk)}`}>{pctS(wk)}</span> vs last week</>} />
+          delta={wk == null ? "Valued at the latest NAVs" : <><span className={`num font-medium ${tone(wk)}`}>{pctS(wk)}</span> vs last week</>} />
         <Tile label="Total gain" value={<span className={tone(gain)}>{gain >= 0 ? "+" : "−"}{inr0(Math.abs(gain))}</span>} icon={ICON.trend} tint="var(--good)"
           delta={<><span className={`num font-medium ${tone(gain)}`}>{invested ? pctS((gain / invested) * 100) : "n/a"}</span> on {inr0(invested)} invested</>} />
         <Tile label="Monthly SIPs" value={inr0(sipTotal)} icon={ICON.repeat} tint="var(--warn)" href="/goals"
-          delta={<>{pf.funds.length} funds · sample amounts</>} />
+          delta={<>across {pf.funds.length} funds</>} />
         <Tile label="This week's verdict" icon={ICON.shield} tint={VHUE[vIdx] ?? "var(--accent)"} href="/report"
           value={r ? <span className="block text-[18px] leading-tight" style={{ color: vIdx > 0 ? VHUE[vIdx] : undefined }}>{r.assessment}</span> : <span className="text-[18px]">No report yet</span>}
           delta={r ? <>{flagged === 0 ? "All funds on track" : `${flagged} fund${flagged > 1 ? "s" : ""} flagged`} · read the report &rarr;</> : "Generate the first report"} />
@@ -99,7 +99,7 @@ export default async function Overview() {
         <section className="card p-5">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="text-base font-semibold">Portfolio performance</h2>
-            <span className="text-xs text-faint">Simulated from sample SIPs, real NAVs</span>
+            <span className="text-xs text-faint">Value of your SIPs at real NAVs</span>
           </div>
           <div className="mt-3"><ValueChart series={pf.series} /></div>
         </section>

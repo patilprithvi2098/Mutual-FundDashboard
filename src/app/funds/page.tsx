@@ -11,7 +11,7 @@ export default async function FundsPage() {
   const [funds, sips] = await Promise.all([activeFunds(), listSips()]);
   return (
     <div className="space-y-6">
-      <PageHead title="Manage funds">Add or remove a fund and the next report adapts. Set each fund's sample SIP amount here too.</PageHead>
+      <PageHead title="Manage funds">Add or remove a fund and the next report adapts. Set each fund's monthly SIP amount here too.</PageHead>
       <FundManager funds={funds} />
       <SipForm sips={sips} />
     </div>

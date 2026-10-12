@@ -66,7 +66,7 @@ export default function ValueChart({ series }: { series: P[] }) {
       </div>
       <div className="relative mt-4">
         <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="block h-[180px] w-full touch-none lg:h-[220px]" role="img"
-          aria-label={`Sample portfolio value from ${day(first.d)} to ${day(last.d)}: ${inr(first.value)} to ${inr(last.value)}`}
+          aria-label={`Portfolio value from ${day(first.d)} to ${day(last.d)}: ${inr(first.value)} to ${inr(last.value)}`}
           onPointerMove={move} onPointerDown={move} onPointerLeave={() => setHover(null)}>
           <defs>
             <linearGradient id="vc-fill" x1="0" x2="0" y1="0" y2="1">

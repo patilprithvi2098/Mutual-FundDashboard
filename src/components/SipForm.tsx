@@ -24,8 +24,8 @@ export default function SipForm({ sips }: { sips: FundSip[] }) {
   }
   return (
     <form onSubmit={save} className="card p-5">
-      <h2 className="text-[15px] font-semibold">Monthly SIP per fund <span className="ml-1 align-middle font-mono text-[10px] font-medium uppercase tracking-[0.06em] text-warn">Sample data</span></h2>
-      <p className="mt-1 text-sm text-muted">Illustrative amounts, not linked to any real account. They set the sample portfolio value on the Overview and the split on Insights.</p>
+      <h2 className="text-[15px] font-semibold">Monthly SIP per fund</h2>
+      <p className="mt-1 text-sm text-muted">How much goes into each fund every month. These amounts drive the portfolio value on the Overview and the split on Insights.</p>
       <ul className="mt-3 divide-y divide-line border-t border-line">
         {sips.map((s) => (
           <li key={s.scheme_code} className="flex items-center gap-3 py-3">

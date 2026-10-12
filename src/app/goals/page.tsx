@@ -22,7 +22,7 @@ export default async function GoalsPage({ searchParams }: { searchParams: Promis
           <p className="l-faint mt-4 text-xs leading-relaxed">
             Projections assume an annual return of {RATE_LOW * 100}% to {RATE_HIGH * 100}%, compounded monthly, on money already saved and on each
             goal&apos;s monthly saving. On pace means the goal is reached even at {RATE_LOW * 100}%, slightly behind means only at the upper end, and well
-            behind means short even at {RATE_HIGH * 100}%. Sample goals and amounts are illustrative data.
+            behind means short even at {RATE_HIGH * 100}%.
           </p>
         </header>
         <div>

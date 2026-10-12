@@ -51,7 +51,6 @@ export default function GoalItem({ goal, today, editHref, action, children }: {
       <div className="flex items-baseline justify-between gap-3">
         <h3 className="text-[19px] font-semibold leading-snug">
           {goal.name}
-          {goal.is_sample && <span className="l-watch-text ml-2 align-middle font-mono text-[10px] font-medium uppercase tracking-[0.06em]">Sample</span>}
         </h3>
         <span className="shrink-0 text-sm font-medium" style={{ color: s.hue }}>{s.word}</span>
       </div>

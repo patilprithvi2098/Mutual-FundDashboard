@@ -56,7 +56,7 @@ export default async function FundPage({ params }: { params: Promise<{ code: str
           <p className="mt-0.5 text-xs text-faint">{asOf ? longDate(asOf) : ""}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-muted">Sample SIP value</p>
+          <p className="text-xs text-muted">Your SIP value</p>
           <p className="num mt-1 text-xl font-semibold">{holding ? inr0(holding.value) : "n/a"}</p>
           <p className="mt-0.5 text-xs text-faint">{holding ? `${inr0(holding.invested)} invested at ${inr0(pf.sipByCode[code] ?? 0)} a month` : ""}</p>
         </div>
