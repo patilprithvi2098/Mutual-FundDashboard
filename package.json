@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "backfill": "tsx --env-file=.env.local scripts/backfill-snapshots.ts"
+    "backfill": "tsx --env-file=.env.local scripts/backfill-snapshots.ts",
+    "copy-to-supabase": "tsx --env-file=.env.local scripts/copy-to-supabase.ts"
   },
   "dependencies": {
     "fast-xml-parser": "^5.11.2",

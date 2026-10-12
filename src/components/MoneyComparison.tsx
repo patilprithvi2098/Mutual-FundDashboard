@@ -58,10 +58,7 @@ export default function MoneyComparison() {
   return (
     <section className="l-card mt-6">
       <button type="button" aria-expanded={open} onClick={() => setOpen((o) => !o)} className="flex min-h-[44px] w-full cursor-pointer items-center justify-between gap-3 px-[18px] py-4 text-left">
-        <span>
-          <span className="block text-base font-semibold">Where else can money go?</span>
-          <span className="l-muted mt-0.5 block text-[13px]">Optional. Five common choices compared.</span>
-        </span>
+        <span className="block text-base font-semibold">Where else can money go?</span>
         <span className="l-plus" aria-hidden>{open ? "−" : "+"}</span>
       </button>
       {open && (

@@ -18,7 +18,7 @@ MESA Cohort C4, AI and its Applications, Section 1 final examination, Problem St
 | Weekly market context | Nifty 50, Midcap 150, Smallcap 250 moves plus Google News RSS headlines |
 | Plain-language report from Gemini | 3 sentences per fund, a market summary and a portfolio verdict reason, using Gemini Flash only |
 | Portfolio verdict | "No action needed", "One fund worth watching" or "Consider reviewing your allocation", decided by rules in code, explained by Gemini |
-| Snapshots stored for trends | Postgres table `weekly_snapshots`, shown on the Trends page |
+| Snapshots stored for trends | Supabase Postgres table `weekly_snapshots`, shown on the Trends page as 12-week status strips |
 | Add or remove a fund without code changes | Manage funds page: enter a scheme code |
 
 ## Components map
@@ -35,7 +35,7 @@ Rows are the components; columns are the stage of the flow. Colours: People, AI,
 | News, Google News RSS (system) | | | Week's market and macro headlines | | |
 | Rules engine (system) | | | | 1W, 1M, YTD returns; benchmark and category gap; verdict | |
 | **Gemini Flash** (AI) | | | | Explains market-wide vs fund-specific gap | 3-sentence fund summaries, verdict reason |
-| Neon Postgres (system) | | | Fund list, past snapshots | | Weekly snapshot stored |
+| Supabase Postgres (system) | | | Fund list, past snapshots | | Weekly snapshot stored |
 | Web dashboard (system) | | | | | Report, trends, manage funds |
 | **Meera as reviewer** (human takes over) | | | | Reviews fund if flagged "Consider reviewing" | |
 
@@ -52,22 +52,37 @@ Rows are the components; columns are the stage of the flow. Colours: People, AI,
 - **Debt funds have no benchmark index.** No free feed exists, so they are compared to the category average only.
 - **Price indices, not total-return indices.** Benchmarks exclude dividends, so a fund can look slightly better than its benchmark than it really is; the 2pp threshold absorbs most of this.
 - **Nasdaq fund** is compared with Nasdaq 100 in USD terms; rupee moves are not adjusted.
-- **Database.** The brief mentions Supabase; this build uses Neon. The code is plain Postgres (`pg`), so switching is a connection-string change.
-- **Public write access.** The fund form and "generate now" button have no login, with a 10-fund cap and a 60-second cooldown. Fine for a demo, add auth before real use.
+- **Category average for the Nasdaq fund** rests on a single peer fund, because few Nasdaq 100 funds of funds exist in India. The other categories use 8 peers.
+- **History.** The latest week was written by Gemini. The earlier weeks were rebuilt from stored NAV history by the same rules engine (see Backfilling history), and the Trends page says so.
+- **Scheduled runs.** The daily ingest and the Saturday report run on Vercel Cron. Both endpoints were tested by calling them with the secret; the first unattended Saturday run happens after submission.
+- **Public write access.** The fund form and goals have no login, with a 10-fund cap and a 60-second cooldown on report generation. Fine for a demo; add auth before real use.
 
 ## Backfilling history
 
-`scripts/backfill.ts` rebuilds 8 to 12 weeks (default 10) of weekly snapshots from the stored NAV and index history, so the Trends page has data before the weekly cron has run that many times.
+`scripts/backfill-snapshots.ts` rebuilds up to 12 weeks of weekly snapshots from the stored NAV and index history, so the Trends page has data before the weekly cron has run that many times.
 
 ```bash
-npm run backfill              # 10 weeks
-npm run backfill -- --weeks 12
-npm run backfill -- --dry-run # print what would be written
+npm run backfill               # 12 weeks
+npm run backfill -- --weeks=8
+npm run backfill -- --dry-run  # print what would be written
+npm run backfill -- --ingest   # fetch fresh NAVs and peers first
 ```
 
-- **Idempotent.** Weeks are upserted, so re-running changes nothing. Any week that already has a real report is skipped. Backfilled reports are marked `model = 'backfill'`.
+- **Idempotent.** Rows written by the script have no summary, so a re-run refreshes only those rows. Snapshots created by a real report are never touched.
 - **Same rules.** Returns, benchmark and category gaps, status and the 3-week "review" streak use the same thresholds as the live report.
 - **Limits.** There is no AI commentary and no headlines for backfilled weeks (news feeds only cover the last week), so they carry rule-based text. Category averages use today's peer set.
+
+## Database (Supabase)
+
+Data lives in Supabase Postgres. The schema is created by the app on first request, and the app connects through Supabase's transaction pooler as a dedicated `meera_app` role that owns only the app's tables, never the `postgres` master login. Row-level security is enabled on every table with no policies, so Supabase's public Data API cannot read or write them; the app connects as the table owner and is unaffected.
+
+The project started on Neon and was moved with `scripts/copy-to-supabase.ts` (`npm run copy-to-supabase`), which copies every table and checks row counts on both sides. The code uses plain `pg`, so any Postgres works.
+
+## Beyond the brief
+
+- A rebased chart per fund (fund against benchmark, 1 week, 1 month or year to date) with a one-sentence reading, and "?" explanations for terms like benchmark and category average.
+- A Goals page: targets with saved-so-far and a monthly saving, marked on pace, slightly behind or well behind using a future-value projection at an assumed 8% to 12% annual return. Goals and SIP amounts are sample data and are labelled as such.
+- "How SIPs work" and "Where else can money go?" cards. The second compares equity, debt, gold, real estate and fixed deposits with rough historical ranges and states that it is not financial advice.
 
 ## Run locally
 
@@ -79,7 +94,7 @@ npm run dev                  # http://localhost:3000
 
 | Variable | Purpose |
 |---|---|
-| `DATABASE_URL` | Postgres connection string (Neon or Supabase). Tables are created automatically on first request |
+| `DATABASE_URL` | Postgres connection string. Supabase transaction pooler, port 6543, with `uselibpqcompat=true&sslmode=require`. Tables are created automatically on first request |
 | `GEMINI_API_KEY` | Google AI Studio key |
 | `GEMINI_MODEL` | Optional, defaults to `gemini-3.8-flash` |
 | `CRON_SECRET` | Any long random string; Vercel Cron sends it as a Bearer token |
@@ -94,4 +109,4 @@ The first page load seeds five funds: UTI Nifty 50 Index (120716), HDFC Mid Cap 
 
 ## Stack
 
-Next.js (App Router, TypeScript), Tailwind, Postgres on Neon, Gemini Flash, Vercel.
+Next.js (App Router, TypeScript), Tailwind, Supabase Postgres, Gemini Flash, Vercel.

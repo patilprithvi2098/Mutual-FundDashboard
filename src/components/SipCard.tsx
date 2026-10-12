@@ -6,10 +6,7 @@ export default function SipCard() {
   return (
     <section className="l-card mt-14">
       <button type="button" aria-expanded={open} onClick={() => setOpen((o) => !o)} className="flex min-h-[44px] w-full cursor-pointer items-center justify-between gap-3 px-[18px] py-4 text-left">
-        <span>
-          <span className="block text-base font-semibold">How SIPs work</span>
-          <span className="l-muted mt-0.5 block text-[13px]">Optional, three short sentences.</span>
-        </span>
+        <span className="block text-base font-semibold">How SIPs work</span>
         <span className="l-plus" aria-hidden>{open ? "\u2212" : "+"}</span>
       </button>
       {open && (

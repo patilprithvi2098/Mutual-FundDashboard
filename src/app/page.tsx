@@ -46,8 +46,12 @@ export default async function Home() {
     <div className="ledger">
       <div className="grid gap-x-16 gap-y-14 lg:grid-cols-[380px_minmax(0,1fr)]">
         <header className="self-start lg:sticky lg:top-8">
-          <p className="l-faint font-mono text-xs tracking-[0.08em]">SATURDAY REPORT · {shortDate(r.week_ending)}</p>
-          <div className="mt-9 flex gap-1.5">
+          <p className="l-faint font-mono text-xs tracking-[0.08em]">WEEKLY REPORT · GENERATED {shortDate(r.generated_at)}</p>
+          <p className="l-muted mt-3 text-sm leading-relaxed [text-wrap:pretty]">
+            A plain-language weekly report on Meera&apos;s mutual funds, written by Gemini Flash from live fund prices, index levels and market news.
+          </p>
+          <p className="l-faint mt-8 font-mono text-[11px] uppercase tracking-[0.06em]">The three possible verdicts</p>
+          <div className="mt-2 flex gap-1.5">
             {VERDICTS.map((v, i) => (<div key={v} style={i === active ? { background: hues[i] } : undefined} className={`h-1 flex-1 rounded-sm ${i === active ? "" : "l-bar-off"}`} />))}
           </div>
           <div className="mt-2 flex gap-1.5 text-[11px] leading-snug">

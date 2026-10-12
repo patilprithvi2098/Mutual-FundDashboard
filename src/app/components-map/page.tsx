@@ -12,7 +12,7 @@ const rows: { label: string; kind: Kind; cells: Partial<Record<(typeof cols)[num
   { label: "News (Google News RSS)", kind: "sys", cells: { Context: "Week's market and macro headlines" } },
   { label: "Rules engine", kind: "sys", cells: { Processing: "1W, 1M, YTD returns; benchmark and category gap; verdict" } },
   { label: "Gemini Flash", kind: "ai", cells: { Processing: "Explains market-wide vs fund-specific gap", Output: "3-sentence fund summaries, verdict reason" } },
-  { label: "Neon Postgres", kind: "sys", cells: { Context: "Fund list, past snapshots", Output: "Weekly snapshot stored" } },
+  { label: "Supabase Postgres", kind: "sys", cells: { Context: "Fund list, past snapshots", Output: "Weekly snapshot stored" } },
   { label: "Web dashboard", kind: "sys", cells: { Output: "Report, trends, manage funds" } },
   { label: "Meera as reviewer", kind: "human", cells: { Processing: "Reviews fund if flagged 'Consider reviewing'" } },
 ];
@@ -49,6 +49,17 @@ export default function ComponentsMap() {
           ))}
         </div>
       </div>
+
+      <section className="rounded-2xl border border-line bg-card p-5">
+        <h2 className="font-semibold">Deviations from the brief</h2>
+        <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted">
+          <li>The small-cap index is the Nifty Smallcap 250, not the Smallcap 100, because no free source returns Smallcap 100 history. The Smallcap 250 is also the official benchmark of Nippon India Small Cap.</li>
+          <li>The short-term debt fund has no free benchmark index feed, so it is compared with its category average only.</li>
+          <li>Benchmarks are price indices rather than total-return indices, and the Nasdaq 100 fund of funds is compared in US dollars.</li>
+          <li>The verdict is decided by fixed rules in code, and Gemini Flash writes the explanation. If Gemini fails, rule-based text is shown and marked as such.</li>
+          <li>The report is delivered on this website every Saturday morning by a scheduled job, rather than by email.</li>
+        </ul>
+      </section>
     </div>
   );
 }

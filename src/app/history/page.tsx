@@ -1,6 +1,7 @@
 import { history } from "@/lib/queries";
 import { sipSplit } from "@/lib/holdings";
 import { listSips } from "@/lib/goals";
+import { q } from "@/lib/db";
 import { shortDate, STATUS } from "@/lib/ledger";
 
 export const dynamic = "force-dynamic";
@@ -31,6 +32,8 @@ export default async function Trends() {
     : "None of your funds has spent three weeks in a row away from on track.";
 
   const sips = await listSips().catch(() => []);
+  const [{ n: aiWeeks }] = await q<{ n: number }>(`select count(*)::int n from reports where ai_used`);
+  const provenance = `${aiWeeks} of these weeks ${aiWeeks === 1 ? "was" : "were"} written with Gemini. The earlier weeks were rebuilt from stored NAV history by the same rules, without AI commentary.`;
   const { rows: split, configured, total } = sipSplit(funds, Object.fromEntries(sips.map((s) => [s.scheme_code, s.monthly_amount])));
   const biggest = [...split].sort((a, b) => b.pct - a.pct)[0];
   const splitSentence = configured
@@ -44,6 +47,7 @@ export default async function Trends() {
         <header className="self-start lg:sticky lg:top-8">
           <h1 className="text-[32px] font-semibold leading-[1.12] tracking-tight lg:text-[38px]">The last {weeks.length} weeks</h1>
           <p className="l-soft mt-3.5 text-[17px] leading-relaxed [text-wrap:pretty] lg:text-lg">{lead}</p>
+          <p className="l-muted mt-3 text-sm leading-relaxed [text-wrap:pretty]">{provenance}</p>
           <div className="l-soft mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[13px]">
             {(["ok", "watch", "review"] as const).map((k) => (<span key={k} className="flex items-center gap-2"><span className="l-swatch" style={{ background: HUE[k] }} />{STATUS[k].word}</span>))}
             <span className="flex items-center gap-2"><span className="l-swatch" style={{ background: "oklch(0.42 0.012 255)" }} />Not enough history</span>
@@ -63,7 +67,7 @@ export default async function Trends() {
                     style={c ? { background: r.have >= 4 ? HUE[c] : "oklch(0.42 0.012 255)" } : { border: "1px dashed oklch(0.45 0.012 255)" }} />
                 ))}
               </div>
-              <div className="l-faint mt-1.5 flex justify-between font-mono text-[11px]"><span>{shortDate(weeks[0])}</span><span>{shortDate(weeks[weeks.length - 1])}</span></div>
+              <div className="l-faint mt-1.5 flex justify-between font-mono text-[11px]"><span>{shortDate(weeks[0])}</span><span>THIS WEEK</span></div>
               {r.have >= 4 && r.last ? (
                 <p className="l-muted mt-2.5 text-sm">It has been {WORD[r.last]} {r.run === weeks.length ? "for all " + weeks.length + " weeks" : r.run === 1 ? "for the past week" : "for " + r.run + " weeks in a row"}.</p>
               ) : (
