@@ -25,12 +25,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <header className="border-b border-line bg-card">
-          <nav className="mx-auto flex max-w-5xl items-center gap-5 px-4 py-3 text-sm">
-            <a href="/" className="mr-auto font-semibold tracking-tight">Meera&apos;s Fund Tracker</a>
-            <a href="/" className="text-muted hover:text-ink">Report</a>
-            <a href="/history" className="text-muted hover:text-ink">Trends</a>
-            <a href="/funds" className="text-muted hover:text-ink">Manage funds</a>
-            <a href="/components-map" className="text-muted hover:text-ink">Components map</a>
+          {/* Phones: title on its own line, links in one row below. sm and up: the original single row. */}
+          <nav className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-5 gap-y-1.5 px-4 py-3 text-sm">
+            <a href="/" className="w-full font-semibold tracking-tight sm:mr-auto sm:w-auto">Meera&apos;s Fund Tracker</a>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 whitespace-nowrap sm:contents">
+              <a href="/" className="text-muted hover:text-ink">Report</a>
+              <a href="/history" className="text-muted hover:text-ink">Trends</a>
+              <a href="/funds" className="text-muted hover:text-ink">Manage funds</a>
+              <a href="/components-map" className="text-muted hover:text-ink">Components map</a>
+            </div>
           </nav>
         </header>
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">{children}</main>
