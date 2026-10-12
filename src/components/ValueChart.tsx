@@ -40,7 +40,9 @@ export default function ValueChart({ series }: { series: P[] }) {
   const W = 640, H = 200, pt = 10, pb = 6;
   if (pts.length < 2) return <p className="text-sm text-muted">Not enough history to draw this chart yet.</p>;
   const vals = pts.flatMap((p) => [p.value, p.invested]);
-  const lo = Math.min(...vals) * 0.98, hi = Math.max(...vals) * 1.01;
+  // All-zero SIP amounts give a flat zero series; say so instead of dividing by a zero range.
+  if (Math.max(...vals) <= 0) return <p className="text-sm text-muted">No SIP amounts set yet. Add them on <a href="/funds" className="font-medium text-accent hover:underline">Manage funds</a> to see the value over time.</p>;
+  const lo = Math.min(...vals) * 0.98, hi = Math.max(...vals) * 1.01 || 1;
   const X = (i: number) => (i / (pts.length - 1)) * W;
   const Y = (v: number) => pt + ((hi - v) / (hi - lo)) * (H - pt - pb);
   const line = pts.map((p, i) => `${X(i).toFixed(1)},${Y(p.value).toFixed(1)}`).join(" ");

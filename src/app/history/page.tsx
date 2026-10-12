@@ -61,7 +61,7 @@ export default async function Trends() {
           {rows.map((r) => (
             <section key={r.scheme_code} className="card p-5">
               <div className="flex items-baseline justify-between gap-3">
-                <h2 className="text-base font-semibold lg:text-[17px]"><a href={`/fund/${r.scheme_code}`} className="hover:underline">{shortName(r.name)}</a></h2>
+                <h2 className="text-base font-semibold lg:text-[17px]"><a href={`/fund/${r.scheme_code}`} className="inline-block py-1 hover:underline">{shortName(r.name)}</a></h2>
                 <span className="text-[13px] font-medium" style={{ color: r.have >= 4 && r.last ? HUE[r.last] : "var(--faint)" }}>{r.have >= 4 && r.last ? STATUS[r.last].word : "Not enough history yet"}</span>
               </div>
               <div className="mt-3 flex gap-[3px] lg:gap-1">

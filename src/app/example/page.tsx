@@ -24,7 +24,7 @@ export default async function ExamplePage() {
     <div className="ledger">
       <div className="grid gap-x-12 gap-y-10 lg:grid-cols-[360px_minmax(0,1fr)]">
         <header className="self-start lg:sticky lg:top-8">
-          <a href="/report" className="l-muted text-sm hover:underline">Back to this week&apos;s report</a>
+          <a href="/report" className="l-muted inline-block py-1 text-sm hover:underline">Back to this week&apos;s report</a>
           <p className="l-faint mt-6 font-mono text-xs tracking-[0.08em]">EXAMPLE · SIMULATED NUMBERS</p>
           <div className="l-card mt-4 p-4 text-sm leading-relaxed">
             <p className="font-semibold">This is what a warning looks like.</p>

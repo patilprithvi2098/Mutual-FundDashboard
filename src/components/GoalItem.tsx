@@ -63,7 +63,7 @@ export default function GoalItem({ goal, today, editHref, action, children }: {
       </div>
       <p className="l-faint mt-2 font-mono text-[13px]">{rupees(goal.saved_amount)} saved so far · {rupees(goal.monthly_amount)} a month</p>
       <p className="l-soft mt-3.5 text-[16px] leading-relaxed [text-wrap:pretty]">{sentence}</p>
-      {editHref && <a href={editHref} className="mt-3.5 inline-block text-[15px] underline underline-offset-4 hover:no-underline" style={{ color: "var(--accent)" }}>Edit this goal</a>}
+      {editHref && <a href={editHref} className="mt-2 inline-block py-1.5 text-[15px] underline underline-offset-4 hover:no-underline" style={{ color: "var(--accent)" }}>Edit this goal</a>}
       {action}
       {children}
     </div>

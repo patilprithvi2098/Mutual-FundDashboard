@@ -96,24 +96,24 @@ export default async function Overview() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
-        <section className="card p-5">
+        <section className="card min-w-0 p-5">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="text-base font-semibold">Portfolio performance</h2>
             <span className="text-xs text-faint">Value of your SIPs at real NAVs</span>
           </div>
           <div className="mt-3"><ValueChart series={pf.series} /></div>
         </section>
-        <section className="card p-5">
+        <section className="card min-w-0 p-5">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="text-base font-semibold">Allocation</h2>
-            <a href="/fund" className="text-sm font-medium text-accent hover:underline">My funds</a>
+            <a href="/fund" className="py-1 text-sm font-medium text-accent hover:underline">My funds</a>
           </div>
           <div className="mt-3 flex flex-col items-center gap-4 sm:flex-row lg:flex-col">
             <Donut parts={alloc} centre={inr0(value)} sub="by value" />
             <ul className="w-full min-w-0 flex-1 space-y-2 text-sm">
               {alloc.map((a, i) => (
                 <li key={a.code}>
-                  <a href={`/fund/${a.code}`} className="flex items-center gap-2 rounded-lg hover:bg-wash">
+                  <a href={`/fund/${a.code}`} className="flex items-center gap-2 rounded-lg py-1 hover:bg-wash">
                     <span className="h-2.5 w-2.5 flex-none rounded-full" style={{ background: SERIES[i % SERIES.length] }} />
                     <span className="min-w-0 flex-1 truncate">{a.label}</span>
                     <span className="num text-muted">{value ? Math.round((a.value / value) * 100) : 0}%</span>
@@ -158,7 +158,7 @@ export default async function Overview() {
         <section className="card p-5">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="text-base font-semibold">This week&apos;s report</h2>
-            <a href="/report" className="text-sm font-medium text-accent hover:underline">Read</a>
+            <a href="/report" className="py-1 text-sm font-medium text-accent hover:underline">Read</a>
           </div>
           {r ? (
             <>
@@ -176,7 +176,7 @@ export default async function Overview() {
         <section className="card p-5">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="text-base font-semibold">Goals</h2>
-            <a href="/goals" className="text-sm font-medium text-accent hover:underline">All goals</a>
+            <a href="/goals" className="py-1 text-sm font-medium text-accent hover:underline">All goals</a>
           </div>
           {goals.length ? (
             <ul className="mt-3 space-y-3">
@@ -200,7 +200,7 @@ export default async function Overview() {
         <section className="card p-5">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="text-base font-semibold">Key events</h2>
-            <a href="/history" className="text-sm font-medium text-accent hover:underline">Insights</a>
+            <a href="/history" className="py-1 text-sm font-medium text-accent hover:underline">Insights</a>
           </div>
           {r && r.headlines.length ? (
             <ul className="mt-3 divide-y divide-line">

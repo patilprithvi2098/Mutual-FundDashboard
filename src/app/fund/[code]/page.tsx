@@ -37,7 +37,7 @@ export default async function FundPage({ params }: { params: Promise<{ code: str
 
   return (
     <div className="space-y-8">
-      <a href="/fund" className="text-sm text-muted hover:text-ink">&larr; All funds</a>
+      <a href="/fund" className="inline-block py-1 text-sm text-muted hover:text-ink">&larr; All funds</a>
       <div className="flex items-start gap-4">
         <span className="badge h-12 w-12 text-base">{initials(fund.name)}</span>
         <div className="min-w-0 flex-1">
@@ -109,7 +109,7 @@ export default async function FundPage({ params }: { params: Promise<{ code: str
         <section className="card p-5">
           <p className="eyebrow">This week&apos;s summary · week ending {shortDate(latest.week_ending)}</p>
           <p className="mt-2 text-[15px] leading-relaxed text-soft [text-wrap:pretty]">{latest.summary ?? "A written summary is not available for this week."}</p>
-          <a href="/report" className="mt-3 inline-block text-sm font-medium text-accent hover:underline">Read the full weekly report &rarr;</a>
+          <a href="/report" className="mt-2 inline-block py-1 text-sm font-medium text-accent hover:underline">Read the full weekly report &rarr;</a>
         </section>
       )}
 

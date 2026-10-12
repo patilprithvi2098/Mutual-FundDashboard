@@ -59,7 +59,7 @@ export default function GoalsManager({ goals, today, initialEdit }: { goals: Goa
         <GoalItem key={g.id} goal={g} today={today}
           action={editing !== g.id && (
             <button type="button" onClick={() => { setEditing(g.id); setEditForm(toForm(g)); setMsg(null); }}
-              className="mt-3.5 block cursor-pointer text-[15px] underline underline-offset-4 hover:no-underline" style={{ color: "var(--accent)" }}>Edit this goal</button>
+              className="mt-2 block min-h-[36px] cursor-pointer text-[15px] underline underline-offset-4 hover:no-underline" style={{ color: "var(--accent)" }}>Edit this goal</button>
           )}>
           {editing === g.id && (
             <>

@@ -38,7 +38,7 @@ export default async function ReportPage() {
       <AssessmentCard assessment={r.assessment} reason={r.reason}>
         <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
           <span className="text-muted">NAV as of {longDate(navAsOf)}</span>
-          <a href="/example" className="font-medium text-accent hover:underline">See what a warning looks like</a>
+          <a href="/example" className="py-1 font-medium text-accent hover:underline">See what a warning looks like</a>
           {!r.ai_used && <span className="rounded-full border border-line bg-wash px-2.5 py-1 font-mono text-xs text-soft">Written by our backup rules</span>}
         </div>
       </AssessmentCard>

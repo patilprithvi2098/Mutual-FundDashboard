@@ -42,7 +42,7 @@ export default async function FundsList() {
           );
         })}
       </div>
-      <a href="/funds" className="inline-block text-sm font-medium text-accent hover:underline">Add or remove a fund &rarr;</a>
+      <a href="/funds" className="inline-block py-1 text-sm font-medium text-accent hover:underline">Add or remove a fund &rarr;</a>
     </div>
   );
 }

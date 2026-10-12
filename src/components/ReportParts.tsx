@@ -46,7 +46,7 @@ export function FundCard(p: FundCardProps) {
       </dl>
       <p className="mt-1.5 text-[11px] text-faint">Returns over the past week.</p>
       <p className="mt-3 text-[15px] leading-relaxed text-soft [text-wrap:pretty]">{p.summary ?? "A written summary is not available for this week."}</p>
-      {p.href && <a href={p.href} className="mt-3 inline-block text-sm font-medium text-accent hover:underline">Chart and full returns &rarr;</a>}
+      {p.href && <a href={p.href} className="mt-2 inline-block py-1 text-sm font-medium text-accent hover:underline">Chart and full returns &rarr;</a>}
     </article>
   );
 }
