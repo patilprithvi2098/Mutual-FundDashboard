@@ -33,7 +33,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <Sidebar />
           <div className="flex min-w-0 flex-1 flex-col">
             <header className="flex items-center justify-between border-b border-line bg-card px-4 py-3 lg:hidden"><Brand /><ThemeToggle compact /></header>
-            <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-10 pt-6 sm:px-6 lg:px-10 lg:pb-12 lg:pt-10">{children}</main>
+            <div className="mx-auto hidden w-full max-w-6xl justify-end px-10 pt-5 lg:flex"><ThemeToggle compact /></div>
+            <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-10 pt-6 sm:px-6 lg:px-10 lg:pb-12 lg:pt-4">{children}</main>
             <footer className="mx-auto w-full max-w-6xl px-4 pb-28 text-xs leading-relaxed text-muted sm:px-6 lg:px-10 lg:pb-8">
               Data: mfapi.in, Yahoo Finance, Google News. Commentary by Gemini Flash. Informational only, not investment advice.
             </footer>
