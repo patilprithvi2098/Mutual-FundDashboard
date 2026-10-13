@@ -40,7 +40,7 @@ export function FundCard(p: FundCardProps) {
         {cells.map(([label, v, tip]) => (
           <div key={label} className="min-w-0">
             <dt className="flex items-center text-[11px] leading-tight text-muted sm:text-xs">{label}{tip}</dt>
-            <dd className={`num mt-0.5 text-[15px] font-semibold ${v == null ? "text-faint" : tone(v)}`}>{v == null ? "n/a" : pctS(v)}</dd>
+            <dd className={`num mt-0.5 text-[15px] font-semibold ${v == null ? "text-muted" : tone(v)}`}>{v == null ? "n/a" : pctS(v)}</dd>
           </div>
         ))}
       </dl>

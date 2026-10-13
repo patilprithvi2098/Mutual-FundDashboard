@@ -74,7 +74,7 @@ export default async function FundPage({ params }: { params: Promise<{ code: str
           {KEYS.map(([k, label]) => (
             <div key={k} className="rounded-xl bg-wash p-3">
               <p className="text-[11px] text-muted sm:text-xs">{label}{k === "ytd" && <Tip term="ytd" />}</p>
-              <p className={`num mt-1 text-[17px] font-semibold ${fundG[k] == null ? "text-faint" : tone(fundG[k])}`}>{pctS(fundG[k])}</p>
+              <p className={`num mt-1 text-[17px] font-semibold ${fundG[k] == null ? "text-muted" : tone(fundG[k])}`}>{pctS(fundG[k])}</p>
             </div>
           ))}
         </div>
@@ -134,7 +134,7 @@ function Row({ label, g, strong }: { label: React.ReactNode; g: Grid; strong?: b
   return (
     <tr>
       <td className={`py-2.5 pr-3 ${strong ? "font-medium" : "text-soft"}`}>{label}</td>
-      {KEYS.map(([k]) => (<td key={k} className={`num py-2.5 text-right ${g[k] == null ? "text-faint" : strong ? `font-semibold ${tone(g[k])}` : "text-soft"}`}>{g[k] == null ? "–" : pctS(g[k])}</td>))}
+      {KEYS.map(([k]) => (<td key={k} className={`num py-2.5 text-right ${g[k] == null ? "text-muted" : strong ? `font-semibold ${tone(g[k])}` : "text-soft"}`}>{g[k] == null ? "–" : pctS(g[k])}</td>))}
     </tr>
   );
 }

@@ -29,7 +29,7 @@ export default function ComponentsMap() {
     <div className="space-y-4">
       <h1 className="text-[26px] font-semibold tracking-tight lg:text-[30px]">How it&apos;s built</h1>
       <p className="max-w-[680px] text-[15px] text-muted">The components map submitted with the assignment: who or what triggers each step, and where the AI, the rules and the human sit.</p>
-      <div className="overflow-x-auto rounded-2xl border border-line bg-card p-5">
+      <div className="overflow-x-auto rounded-2xl border border-line bg-card p-5" tabIndex={0} role="region" aria-label="Components map, scrolls sideways on small screens">
         <div className="grid min-w-[860px] grid-cols-[170px_repeat(5,1fr)] gap-x-3">
           <div />
           {cols.map((c) => <div key={c} className="pb-3 text-center text-sm text-muted">{c}</div>)}

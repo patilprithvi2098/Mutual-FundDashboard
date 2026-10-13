@@ -2,18 +2,18 @@
 
 /* Light design system: calm neutrals, one deep indigo accent, green for up, red used sparingly, amber for "watch". */
 :root {
-  --bg: #f7f8f7; --card: #ffffff; --ink: #172033; --soft: #344054; --muted: #667085; --faint: #8a93a3;
+  --bg: #f7f8f7; --card: #ffffff; --ink: #172033; --soft: #344054; --muted: #5f6a7f; --faint: #697283;
   --line: #e6e8ec; --line-strong: #d5d9e0; --wash: #f1f3f5;
-  --good: #12805c; --good-soft: #e7f4ee;
-  --bad: #c2412d; --bad-soft: #fcece9;
-  --warn: #b26b00; --warn-soft: #fdf3e1;
+  --good: #0f6e4f; --good-soft: #e7f4ee;
+  --bad: #b53a27; --bad-soft: #fcece9;
+  --warn: #8f5500; --warn-soft: #fdf3e1;
   --accent: #3730a3; --accent-soft: #eef0fb; --accent-ink: #2e2a85; --on-accent: #ffffff;
   --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
 }
 
 /* Dark mode: same tokens, re-tuned. Applied via data-theme, set before paint by the inline script in layout.tsx. */
 :root[data-theme="dark"] {
-  --bg: #0f1115; --card: #171a21; --ink: #e8eaf0; --soft: #c4c9d6; --muted: #8e97aa; --faint: #6c7489;
+  --bg: #0f1115; --card: #171a21; --ink: #e8eaf0; --soft: #c4c9d6; --muted: #8e97aa; --faint: #8690a4;
   --line: #262b36; --line-strong: #353c4b; --wash: #1f2430;
   --good: #3ddc97; --good-soft: #10281f;
   --bad: #ff7b6b; --bad-soft: #2e1a18;
