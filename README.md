@@ -18,12 +18,12 @@ MESA Cohort C4, AI and its Applications, Section 1 final examination, Problem St
 | Weekly market context | Nifty 50, Midcap 150, Smallcap 250 moves plus Google News RSS headlines |
 | Plain-language report from Gemini | 3 sentences per fund, a market summary and a portfolio verdict reason, using Gemini Flash only |
 | Portfolio verdict | "No action needed", "One fund worth watching" or "Consider reviewing your allocation", decided by rules in code, explained by Gemini |
-| Snapshots stored for trends | Supabase Postgres table `weekly_snapshots`, shown on the Trends page as 12-week status strips |
+| Snapshots stored for trends | Supabase Postgres table `weekly_snapshots`, shown on the Insights page (the map's "trends") as 12-week status strips with ahead/behind streaks |
 | Add or remove a fund without code changes | Manage funds page: enter a scheme code |
 
 ## Components map
 
-Rows are the components; columns are the stage of the flow. Colours: People, AI, Data and systems, Human takes over. The rendered version is at `/components-map`.
+Rows are the components; columns are the stage of the flow. Colours: People, AI, Data and systems, Human takes over. The rendered version is at `/components-map` and is kept identical to this submitted table; additions since submission are listed under "Beyond the brief", not in the map.
 
 | Component | Trigger | Input | Context | Processing | Output |
 |---|---|---|---|---|---|
@@ -53,7 +53,7 @@ Rows are the components; columns are the stage of the flow. Colours: People, AI,
 - **Price indices, not total-return indices.** Benchmarks exclude dividends, so a fund can look slightly better than its benchmark than it really is; the 2pp threshold absorbs most of this.
 - **Nasdaq fund** is compared with Nasdaq 100 in USD terms; rupee moves are not adjusted.
 - **Category average for the Nasdaq fund** rests on a single peer fund, because few Nasdaq 100 funds of funds exist in India. The other categories use 8 peers.
-- **History.** The latest week was written by Gemini. The earlier weeks were rebuilt from stored NAV history by the same rules engine (see Backfilling history), and the Trends page says so.
+- **History.** The latest week was written by Gemini. The earlier weeks were rebuilt from stored NAV history by the same rules engine (see Backfilling history), and the Insights page says so.
 - **Scheduled runs.** The daily ingest and the Saturday report run on Vercel Cron. Both endpoints were tested by calling them with the secret; the first unattended Saturday run happens after submission.
 - **Public write access.** The fund form and goals have no login (the brief asks for an open form), with a 10-fund cap. Regenerating the report needs an admin passcode and has a 60-second cooldown. Add real auth before real use.
 
@@ -80,10 +80,15 @@ The project started on Neon and was moved with `scripts/copy-to-supabase.ts` (`n
 
 ## Beyond the brief
 
+Everything in the submitted components map is built. These sit on top of it and are reachable from the sidebar, the bottom nav and the More page; nothing in the map depends on them.
+
+- **Overview** (`/`). A summary page: Meera's monthly SIP amounts valued at real NAVs since August 2024 (portfolio value, gain, performance chart, allocation), the three market indices and her funds as a ticker strip, this week's verdict, goals progress and the week's headlines. The amounts are illustrative and editable on Manage funds; the footer says so.
+- **Fund pages** (`/fund`, `/fund/[code]`). Per-fund returns for 1 week, 1 month, 3 months, year to date and 1 year against the benchmark and category, the rebased chart, the week's Gemini summary and a 12-week status strip.
+- **Tappable verdicts** on the weekly report explain the rule behind each of the three verdicts. **Light and dark mode**, saved per device.
 - **What a warning looks like** (`/example`). Every real week so far is "No action needed", so this page shows the amber state: it copies this week's report, lowers one fund's returns below its benchmark, and runs the real rules and the real Gemini prompt on it. Built once by `npm run build-example` and saved, so opening it never calls Gemini. It is clearly labelled as simulated.
 - A rebased chart per fund (fund against benchmark, 1 week, 1 month or year to date) with a one-sentence reading, and "?" explanations for terms like benchmark and category average.
-- A Goals page: targets with saved-so-far and a monthly saving, marked on pace, slightly behind or well behind using a future-value projection at an assumed 8% to 12% annual return. Goals and SIP amounts are sample data and are labelled as such.
-- "How SIPs work" and "Where else can money go?" cards. The second compares equity, debt, gold, real estate and fixed deposits with rough historical ranges and states that it is not financial advice.
+- A Goals page: targets with saved-so-far and a monthly saving, marked on pace, slightly behind or well behind using a future-value projection at an assumed 8% to 12% annual return. Goals and SIP amounts are illustrative; the site footer says so.
+- "How SIPs work" and "Where else can money go?" cards on the Goals page. The second compares equity, debt, gold, real estate and fixed deposits with rough historical ranges and states that it is not financial advice.
 
 ## Run locally
 
