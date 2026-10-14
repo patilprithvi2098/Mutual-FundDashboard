@@ -4,16 +4,16 @@ type Kind = "people" | "ai" | "sys" | "human";
 const cols = ["Trigger", "Input", "Context", "Processing", "Output"] as const;
 
 const rows: { label: string; kind: Kind; cells: Partial<Record<(typeof cols)[number], string>> }[] = [
-  { label: "Meera", kind: "people", cells: { Trigger: "Opens Saturday report", Input: "Enters or removes a scheme code", Output: "Reads plain-language report" } },
+  { label: "Meera", kind: "people", cells: { Trigger: "Opens Saturday report", Input: "Adds or removes a scheme code; sets SIP amounts and goals", Output: "Reads the overview and the weekly report" } },
   { label: "Vercel Cron", kind: "sys", cells: { Trigger: "Daily NAV pull; Saturday 8:00 IST report" } },
-  { label: "Fund form", kind: "sys", cells: { Input: "Validates code, adds or removes fund" } },
-  { label: "MF data (mfapi.in)", kind: "sys", cells: { Input: "Daily NAV for each fund", Context: "NAVs of category peers" } },
-  { label: "Index data (Yahoo Finance)", kind: "sys", cells: { Context: "Nifty 50, Midcap 150, Smallcap 250" } },
+  { label: "Fund form", kind: "sys", cells: { Input: "Checks the code exists on mfapi, adds or removes fund" } },
+  { label: "MF data (mfapi.in)", kind: "sys", cells: { Input: "Daily NAV for each fund", Context: "NAVs of up to 8 category peers" } },
+  { label: "Index data (Yahoo Finance)", kind: "sys", cells: { Context: "Nifty 50, Midcap 150, Smallcap 250; Nasdaq 100 for the US fund" } },
   { label: "News (Google News RSS)", kind: "sys", cells: { Context: "Week's market and macro headlines" } },
-  { label: "Rules engine", kind: "sys", cells: { Processing: "1W, 1M, YTD returns; benchmark and category gap; verdict" } },
-  { label: "Gemini Flash", kind: "ai", cells: { Processing: "Explains market-wide vs fund-specific gap", Output: "3-sentence fund summaries, verdict reason" } },
-  { label: "Supabase Postgres", kind: "sys", cells: { Context: "Fund list, past snapshots", Output: "Weekly snapshot stored" } },
-  { label: "Web dashboard", kind: "sys", cells: { Output: "Report, trends, manage funds" } },
+  { label: "Rules engine", kind: "sys", cells: { Processing: "1W, 1M, YTD returns; gap to benchmark and category; market-wide or fund-specific; three flagged weeks escalate; verdict", Output: "Backup text if Gemini fails" } },
+  { label: "Gemini Flash", kind: "ai", cells: { Processing: "Explains the gap using the week's headlines", Output: "3-sentence fund summaries, verdict reason, market summary" } },
+  { label: "Supabase Postgres", kind: "sys", cells: { Context: "Funds, NAV and index history, past snapshots, goals, SIPs", Output: "Weekly snapshot and report stored" } },
+  { label: "Web dashboard", kind: "sys", cells: { Output: "Overview, weekly report, fund pages, insights, goals, manage funds" } },
   { label: "Meera as reviewer", kind: "human", cells: { Processing: "Reviews fund if flagged 'Consider reviewing'" } },
 ];
 
@@ -28,7 +28,7 @@ export default function ComponentsMap() {
   return (
     <div className="space-y-4">
       <h1 className="text-[26px] font-semibold tracking-tight lg:text-[30px]">How it&apos;s built</h1>
-      <p className="max-w-[680px] text-[15px] text-muted">The components map as submitted with the assignment: who or what triggers each step, and where the AI, the rules and the human sit. Everything in the map is built; the sections below record where the build deviates from the brief and what was added on top.</p>
+      <p className="max-w-[680px] text-[15px] text-muted">The components map of the build as it runs: who or what triggers each step, and where the AI, the rules and the human sit. The rules make every decision; Gemini Flash only explains. The sections below record where the build deviates from the brief and what was added on top.</p>
       <div className="overflow-x-auto rounded-2xl border border-line bg-card p-5" tabIndex={0} role="region" aria-label="Components map, scrolls sideways on small screens">
         <div className="grid min-w-[860px] grid-cols-[170px_repeat(5,1fr)] gap-x-3">
           <div />
@@ -63,7 +63,7 @@ export default function ComponentsMap() {
       </section>
 
       <section className="rounded-2xl border border-line bg-card p-5">
-        <h2 className="font-semibold">Added beyond the brief (not in the submitted map)</h2>
+        <h2 className="font-semibold">Added beyond the brief</h2>
         <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted">
           <li>An overview that values Meera&apos;s monthly SIPs at real NAVs, with a performance chart and allocation. The SIP amounts are illustrative and editable on Manage funds.</li>
           <li>Goals with SIP projections at 8% to 12% a year, and a pace label for each goal.</li>
@@ -71,7 +71,6 @@ export default function ComponentsMap() {
           <li>Past weeks were backfilled from stored NAV history by the same rules, so Insights shows 12 weeks of status.</li>
           <li>Regenerating the report by hand needs an admin passcode, so visitors cannot spend the Gemini quota. Cron routes need a secret.</li>
           <li>Light and dark mode, and tappable verdicts that explain the rule behind each one.</li>
-          <li>In the map, &ldquo;trends&rdquo; is the page now called Insights, and &ldquo;manage funds&rdquo; also holds the monthly SIP amounts. The Nasdaq 100 index feed, the three-week escalation rule and Gemini&apos;s market summary are details inside the Index data, Rules engine and Gemini rows.</li>
         </ul>
       </section>
     </div>

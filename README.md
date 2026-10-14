@@ -23,20 +23,20 @@ MESA Cohort C4, AI and its Applications, Section 1 final examination, Problem St
 
 ## Components map
 
-Rows are the components; columns are the stage of the flow. Colours: People, AI, Data and systems, Human takes over. The rendered version is at `/components-map` and is kept identical to this submitted table; additions since submission are listed under "Beyond the brief", not in the map.
+Rows are the components; columns are the stage of the flow. Colours: People, AI, Data and systems, Human takes over. The rendered version is at `/components-map` and matches the build as it runs.
 
 | Component | Trigger | Input | Context | Processing | Output |
 |---|---|---|---|---|---|
-| **Meera** (people) | Opens Saturday report | Enters or removes a scheme code | | | Reads plain-language report |
+| **Meera** (people) | Opens Saturday report | Adds or removes a scheme code; sets SIP amounts and goals | | | Reads the overview and the weekly report |
 | Vercel Cron (system) | Daily NAV pull; Saturday 8:00 IST report | | | | |
-| Fund form (system) | | Validates code, adds or removes fund | | | |
-| MF data, mfapi.in (system) | | Daily NAV for each fund | NAVs of category peers | | |
-| Index data, Yahoo Finance (system) | | | Nifty 50, Midcap 150, Smallcap 250 | | |
+| Fund form (system) | | Checks the code exists on mfapi, adds or removes fund | | | |
+| MF data, mfapi.in (system) | | Daily NAV for each fund | NAVs of up to 8 category peers | | |
+| Index data, Yahoo Finance (system) | | | Nifty 50, Midcap 150, Smallcap 250; Nasdaq 100 for the US fund | | |
 | News, Google News RSS (system) | | | Week's market and macro headlines | | |
-| Rules engine (system) | | | | 1W, 1M, YTD returns; benchmark and category gap; verdict | |
-| **Gemini Flash** (AI) | | | | Explains market-wide vs fund-specific gap | 3-sentence fund summaries, verdict reason |
-| Supabase Postgres (system) | | | Fund list, past snapshots | | Weekly snapshot stored |
-| Web dashboard (system) | | | | | Report, trends, manage funds |
+| Rules engine (system) | | | | 1W, 1M, YTD returns; gap to benchmark and category; market-wide or fund-specific; three flagged weeks escalate; verdict | Backup text if Gemini fails |
+| **Gemini Flash** (AI) | | | | Explains the gap using the week's headlines | 3-sentence fund summaries, verdict reason, market summary |
+| Supabase Postgres (system) | | | Funds, NAV and index history, past snapshots, goals, SIPs | | Weekly snapshot and report stored |
+| Web dashboard (system) | | | | | Overview, weekly report, fund pages, insights, goals, manage funds |
 | **Meera as reviewer** (human takes over) | | | | Reviews fund if flagged "Consider reviewing" | |
 
 ## Design decisions
@@ -80,7 +80,7 @@ The project started on Neon and was moved with `scripts/copy-to-supabase.ts` (`n
 
 ## Beyond the brief
 
-Everything in the submitted components map is built. These sit on top of it and are reachable from the sidebar, the bottom nav and the More page; nothing in the map depends on them.
+Everything in the components map is built. These sit on top of the brief and are reachable from the sidebar, the bottom nav and the More page; nothing in the map depends on them.
 
 - **Overview** (`/`). A summary page: Meera's monthly SIP amounts valued at real NAVs since August 2024 (portfolio value, gain, performance chart, allocation), the three market indices and her funds as a ticker strip, this week's verdict, goals progress and the week's headlines. The amounts are illustrative and editable on Manage funds; the footer says so.
 - **Fund pages** (`/fund`, `/fund/[code]`). Per-fund returns for 1 week, 1 month, 3 months, year to date and 1 year against the benchmark and category, the rebased chart, the week's Gemini summary and a 12-week status strip.
