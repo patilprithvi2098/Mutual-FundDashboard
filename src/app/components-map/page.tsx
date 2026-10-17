@@ -28,7 +28,7 @@ export default function ComponentsMap() {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-semibold">Components map</h1>
-      <div className="overflow-x-auto rounded-2xl border border-line bg-card p-5">
+      <div tabIndex={0} role="region" aria-label="Components map, scrolls sideways on small screens" className="overflow-x-auto rounded-2xl border border-line bg-card p-5 focus-visible:outline-2 focus-visible:outline-accent">
         <div className="grid min-w-[860px] grid-cols-[170px_repeat(5,1fr)] gap-x-3">
           <div />
           {cols.map((c) => <div key={c} className="pb-3 text-center text-sm text-muted">{c}</div>)}

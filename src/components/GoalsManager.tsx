@@ -21,11 +21,11 @@ function GoalForm({ value, onChange, onSubmit, onCancel, busy, submitLabel, extr
   const set = (k: keyof Form) => (e: React.ChangeEvent<HTMLInputElement>) => onChange({ ...value, [k]: e.target.value });
   return (
     <form onSubmit={onSubmit} className="mt-4 grid gap-3 lg:grid-cols-2">
-      <label className="l-muted text-sm lg:col-span-2">Goal name<input required maxLength={60} value={value.name} onChange={set("name")} placeholder="For example, a new car" className={input} /></label>
-      <label className="l-muted text-sm">Target amount (₹)<input required type="number" inputMode="numeric" min={1000} step={1000} value={value.target_amount} onChange={set("target_amount")} className={input} /></label>
-      <label className="l-muted text-sm">Target date<input required type="date" value={value.target_date} onChange={set("target_date")} className={input} /></label>
-      <label className="l-muted text-sm">Saved so far (₹)<input required type="number" inputMode="numeric" min={0} step={500} value={value.saved_amount} onChange={set("saved_amount")} className={input} /></label>
-      <label className="l-muted text-sm">Monthly saving for this goal (₹)<input required type="number" inputMode="numeric" min={0} step={500} value={value.monthly_amount} onChange={set("monthly_amount")} className={input} /></label>
+      <label className="l-muted text-sm lg:col-span-2">Goal name<input name="name" required maxLength={60} value={value.name} onChange={set("name")} placeholder="For example, a new car" className={input} /></label>
+      <label className="l-muted text-sm">Target amount (₹)<input required type="number" inputMode="numeric" name="target_amount" min={1000} step={1000} value={value.target_amount} onChange={set("target_amount")} className={input} /></label>
+      <label className="l-muted text-sm">Target date<input required name="target_date" type="date" value={value.target_date} onChange={set("target_date")} className={input} /></label>
+      <label className="l-muted text-sm">Saved so far (₹)<input required type="number" inputMode="numeric" name="saved_amount" min={0} step={500} value={value.saved_amount} onChange={set("saved_amount")} className={input} /></label>
+      <label className="l-muted text-sm">Monthly saving for this goal (₹)<input required type="number" inputMode="numeric" name="monthly_amount" min={0} step={500} value={value.monthly_amount} onChange={set("monthly_amount")} className={input} /></label>
       <div className="flex flex-wrap gap-2 lg:col-span-2">
         <button disabled={busy} className={primary}>{busy ? "Saving…" : submitLabel}</button>
         {onCancel && <button type="button" onClick={onCancel} className={secondary}>Cancel</button>}
@@ -81,7 +81,11 @@ export default function GoalsManager({ goals, sips, today, initialEdit }: { goal
           <div className="l-card p-[18px]">
             <h2 className="text-base font-semibold">Add a goal</h2>
             <GoalForm value={addForm} onChange={setAddForm} busy={busy} submitLabel="Add goal" onCancel={goals.length ? () => setAdding(false) : undefined}
-              onSubmit={async (e) => { e.preventDefault(); if (await send("/api/goals", "POST", addForm, "add", "Goal added.")) { setAddForm(EMPTY); setAdding(false); } }} />
+              onSubmit={async (e) => {
+                e.preventDefault();
+                // The add card closes on success, so the confirmation lives under the list, where it stays visible.
+                if (await send("/api/goals", "POST", addForm, "add", "Goal added.")) { setAddForm(EMPTY); setAdding(false); setMsg({ ok: true, t: "Goal added.", where: "list" }); }
+              }} />
             {note("add")}
           </div>
         ) : (

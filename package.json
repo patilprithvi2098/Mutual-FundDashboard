@@ -8,7 +8,9 @@
     "start": "next start",
     "backfill": "tsx --env-file=.env.local scripts/backfill-snapshots.ts",
     "copy-to-supabase": "tsx --env-file=.env.local scripts/copy-to-supabase.ts",
-    "build-example": "tsx --env-file=.env.local scripts/build-example.ts"
+    "build-example": "tsx --env-file=.env.local scripts/build-example.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "fast-xml-parser": "^5.11.2",
@@ -19,6 +21,8 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.64.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/pg": "^8.23.1",

@@ -11,7 +11,10 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const { code } = await req.json().catch(() => ({}));
-  const n = Number(String(code ?? "").trim());
+  const raw = String(code ?? "").trim();
+  // Digits only and a sane length: a 300-digit string is still an "integer" to Number.isInteger,
+  // and would otherwise be sent to mfapi.in as "1e+300".
+  const n = /^\d{1,10}$/.test(raw) ? Number(raw) : NaN;
   if (!Number.isInteger(n) || n <= 0) return NextResponse.json({ error: "Enter a numeric scheme code, e.g. 120716." }, { status: 400 });
   const current = await activeFunds();
   if (current.length >= MAX_FUNDS && !current.some((f) => f.scheme_code === n))
