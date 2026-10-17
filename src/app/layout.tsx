@@ -1,5 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Brand, BottomNav, Sidebar } from "@/components/Nav";
+import ThemeToggle, { THEME_SCRIPT } from "@/components/ThemeToggle";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,34 +15,32 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Meera's Fund Tracker",
+  title: "Meera's Wealth",
   description: "Plain-language weekly mutual fund report with benchmark and market context.",
 };
+export const viewport: Viewport = { themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f7f8f7" }, { media: "(prefers-color-scheme: dark)", color: "#0f1115" }] };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
-        <header className="border-b border-line bg-card">
-          {/* Phones: title on its own line, links in one row below. sm and up: the original single row. */}
-          <nav className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-5 gap-y-1.5 px-4 py-3 text-sm">
-            <a href="/" className="w-full font-semibold tracking-tight sm:mr-auto sm:w-auto">Meera&apos;s Fund Tracker</a>
-            <div className="flex flex-wrap gap-x-4 gap-y-1 whitespace-nowrap sm:contents">
-              <a href="/" className="text-muted hover:text-ink">Report</a>
-              <a href="/history" className="text-muted hover:text-ink">Trends</a>
-              <a href="/goals" className="text-muted hover:text-ink">Goals</a>
-              <a href="/funds" className="text-muted hover:text-ink">Funds</a>
-              <a href="/components-map" className="text-muted hover:text-ink">Components map</a>
-            </div>
-          </nav>
-        </header>
-        <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">{children}</main>
-        <footer className="mx-auto w-full max-w-5xl px-4 pb-8 text-xs text-muted">
-          Data: mfapi.in, Yahoo Finance, Google News. Commentary by Gemini Flash. Informational only, not investment advice.
-        </footer>
+      <head><script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} /></head>
+      <body className="min-h-full">
+        <div className="flex min-h-screen">
+          <Sidebar />
+          <div className="flex min-w-0 flex-1 flex-col">
+            <header className="flex items-center justify-between border-b border-line bg-card px-4 py-3 lg:hidden"><Brand /><ThemeToggle compact /></header>
+            <div className="mx-auto hidden w-full max-w-6xl justify-end px-10 pt-5 lg:flex"><ThemeToggle compact /></div>
+            <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-10 pt-6 sm:px-6 lg:px-10 lg:pb-12 lg:pt-4">{children}</main>
+            <footer className="mx-auto w-full max-w-6xl px-4 pb-28 text-xs leading-relaxed text-muted sm:px-6 lg:px-10 lg:pb-8">
+              Data: mfapi.in, Yahoo Finance, Google News. Commentary by Gemini Flash. Meera&apos;s holdings and goals are illustrative. Informational only, not investment advice.
+            </footer>
+          </div>
+        </div>
+        <BottomNav />
       </body>
     </html>
   );

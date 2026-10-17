@@ -5,8 +5,16 @@ import { test } from "@playwright/test";
 // Output: test-results/screens/<page>-<width>.png
 // ADAPT: the page list.
 const PAGES = [
-  { path: "/", name: "report" }, { path: "/history", name: "trends" }, { path: "/goals", name: "goals" },
-  { path: "/funds", name: "funds" }, { path: "/components-map", name: "components-map" }, { path: "/example", name: "example" },
+  { path: "/", name: "overview" },
+  { path: "/report", name: "report" },
+  { path: "/fund", name: "fund-list" },
+  { path: "/fund/120716", name: "fund-detail" },
+  { path: "/history", name: "trends" },
+  { path: "/goals", name: "goals" },
+  { path: "/funds", name: "manage-funds" },
+  { path: "/more", name: "more" },
+  { path: "/components-map", name: "components-map" },
+  { path: "/example", name: "example" },
 ];
 const WIDTHS = [375, 768, 1440];
 

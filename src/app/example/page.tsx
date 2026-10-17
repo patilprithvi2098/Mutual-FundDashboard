@@ -1,6 +1,7 @@
 import { q } from "@/lib/db";
 import { VERDICTS, longDate } from "@/lib/ledger";
 import FundRow from "@/components/FundRow";
+import { shortName } from "@/lib/names";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Example warning" };
@@ -21,15 +22,15 @@ export default async function ExamplePage() {
 
   return (
     <div className="ledger">
-      <div className="grid gap-x-16 gap-y-14 lg:grid-cols-[380px_minmax(0,1fr)]">
+      <div className="grid gap-x-12 gap-y-10 lg:grid-cols-[360px_minmax(0,1fr)]">
         <header className="self-start lg:sticky lg:top-8">
-          <a href="/" className="l-muted text-sm hover:underline">Back to this week&apos;s report</a>
+          <a href="/report" className="l-muted inline-block py-1 text-sm hover:underline">Back to this week&apos;s report</a>
           <p className="l-faint mt-6 font-mono text-xs tracking-[0.08em]">EXAMPLE · SIMULATED NUMBERS</p>
           <div className="l-card mt-4 p-4 text-sm leading-relaxed">
             <p className="font-semibold">This is what a warning looks like.</p>
             <p className="l-soft mt-2 [text-wrap:pretty]">
               Every fund has been on track for weeks, so the real report has not needed to warn Meera yet. This page copies the report for the week
-              to {longDate(ex.based_on_week)} and lowers {ex.stressed_fund}&apos;s returns so it trails its benchmark by {ex.shift.m} points over the month
+              to {longDate(ex.based_on_week)} and lowers {shortName(ex.stressed_fund)}&apos;s returns so it trails its benchmark by {ex.shift.m} points over the month
               and {ex.shift.w} points over the week. The real rules then flag it, and Gemini Flash ({ex.model}) writes the explanation.
               The other funds keep their real numbers.
             </p>
@@ -56,7 +57,7 @@ export default async function ExamplePage() {
               <span className="text-right">Benchmark</span>
             </div>
             {ex.funds.map((f) => (
-              <FundRow key={f.scheme_code} name={f.stressed ? `${f.fund_name} (simulated)` : f.fund_name} status={f.status}
+              <FundRow key={f.scheme_code} name={f.stressed ? `${shortName(f.fund_name)} (simulated)` : shortName(f.fund_name)} status={f.status}
                 fund1w={f.ret_1w == null ? null : String(f.ret_1w)} bench1w={f.bench_1w == null ? null : String(f.bench_1w)}
                 summary={f.summary ?? "A written summary is not available for this fund."} />
             ))}

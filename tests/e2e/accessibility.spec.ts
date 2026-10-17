@@ -2,10 +2,14 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 const PAGES = [
-  { path: "/", name: "Report" },
+  { path: "/", name: "Overview" },
+  { path: "/report", name: "Report" },
+  { path: "/fund", name: "Fund list" },
+  { path: "/fund/120716", name: "Fund detail" },
   { path: "/history", name: "Trends" },
   { path: "/goals", name: "Goals" },
-  { path: "/funds", name: "Funds" },
+  { path: "/funds", name: "Manage funds" },
+  { path: "/more", name: "More" },
   { path: "/components-map", name: "Components map" },
   { path: "/example", name: "Example" },
 ];

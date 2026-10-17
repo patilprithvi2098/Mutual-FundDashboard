@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const PORT = 3100;
+// Next.js allows one dev server per project, so reuse the one on the usual port if it is already running.
+const PORT = Number(process.env.PW_PORT ?? 3000);
 
 export default defineConfig({
   testDir: "./tests/e2e",

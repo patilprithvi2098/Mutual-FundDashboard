@@ -22,7 +22,7 @@ export default function RunButton({ label = "Generate report now" }: { label?: s
   }
   return (
     <div className="flex flex-col items-start gap-2">
-      <button onClick={run} disabled={busy} className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white! disabled:opacity-60">
+      <button onClick={run} disabled={busy} className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent disabled:opacity-60">
         {busy ? "Working…" : label}
       </button>
       {msg && <p className="text-sm text-muted">{msg}</p>}

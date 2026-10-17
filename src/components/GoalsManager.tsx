@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import GoalItem from "@/components/GoalItem";
-import type { FundSip, Goal } from "@/lib/goalMath";
+import type { Goal } from "@/lib/goalMath";
 
 type Form = { name: string; target_amount: string; target_date: string; saved_amount: string; monthly_amount: string };
 const EMPTY: Form = { name: "", target_amount: "", target_date: "", saved_amount: "0", monthly_amount: "" };
@@ -35,13 +35,12 @@ function GoalForm({ value, onChange, onSubmit, onCancel, busy, submitLabel, extr
   );
 }
 
-export default function GoalsManager({ goals, sips, today, initialEdit }: { goals: Goal[]; sips: FundSip[]; today: string; initialEdit: number | null }) {
+export default function GoalsManager({ goals, today, initialEdit }: { goals: Goal[]; today: string; initialEdit: number | null }) {
   const router = useRouter();
   const [editing, setEditing] = useState<number | null>(initialEdit);
   const [editForm, setEditForm] = useState<Form>(() => toForm(goals.find((g) => g.id === initialEdit) ?? goals[0] ?? ({} as Goal)));
   const [adding, setAdding] = useState(goals.length === 0);
   const [addForm, setAddForm] = useState<Form>(EMPTY);
-  const [amounts, setAmounts] = useState<Record<number, string>>(Object.fromEntries(sips.map((s) => [s.scheme_code, String(s.monthly_amount)])));
   const [msg, setMsg] = useState<{ ok: boolean; t: string; where: string } | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -53,7 +52,6 @@ export default function GoalsManager({ goals, sips, today, initialEdit }: { goal
     setMsg({ ok: true, t: done, where }); router.refresh(); return true;
   }
   const note = (where: string) => msg?.where === where && <p className="mt-3 text-sm" style={{ color: msg.ok ? "var(--l-ok)" : "var(--l-review)" }}>{msg.t}</p>;
-  const total = sips.reduce((a, s) => a + Number(amounts[s.scheme_code] || 0), 0);
 
   return (
     <div>
@@ -61,7 +59,7 @@ export default function GoalsManager({ goals, sips, today, initialEdit }: { goal
         <GoalItem key={g.id} goal={g} today={today}
           action={editing !== g.id && (
             <button type="button" onClick={() => { setEditing(g.id); setEditForm(toForm(g)); setMsg(null); }}
-              className="mt-3.5 block cursor-pointer text-[15px] underline underline-offset-4 hover:no-underline" style={{ color: "oklch(0.8 0.1 240)" }}>Edit this goal</button>
+              className="mt-2 block min-h-[36px] cursor-pointer text-[15px] underline underline-offset-4 hover:no-underline" style={{ color: "var(--accent)" }}>Edit this goal</button>
           )}>
           {editing === g.id && (
             <>
@@ -94,30 +92,6 @@ export default function GoalsManager({ goals, sips, today, initialEdit }: { goal
         {note("list")}
       </div>
 
-      <form className="l-card mt-14 p-[18px]" onSubmit={async (e) => {
-        e.preventDefault();
-        await send("/api/sips", "PUT", sips.map((s) => ({ scheme_code: s.scheme_code, monthly_amount: Number(amounts[s.scheme_code] || 0) })), "sip", "SIP amounts saved.");
-      }}>
-        <h2 className="text-base font-semibold">Monthly SIP per fund <span className="l-watch-text ml-1 font-mono text-[10px] font-medium uppercase tracking-[0.06em]">Sample data</span></h2>
-        <p className="l-muted mt-1 text-sm leading-relaxed">These amounts are illustrative and are not linked to any real account. They set the split shown on the Trends page.</p>
-        <div className="mt-3">
-          {sips.map((s) => (
-            <div key={s.scheme_code} className="flex items-center justify-between gap-3 border-t l-line py-3">
-              <label htmlFor={`sip-${s.scheme_code}`} className="min-w-0 text-sm">{s.name}</label>
-              <span className="flex shrink-0 items-center gap-1 text-sm">
-                <span className="l-muted">₹</span>
-                <input id={`sip-${s.scheme_code}`} type="number" inputMode="numeric" min={0} step={500} value={amounts[s.scheme_code] ?? ""}
-                  onChange={(e) => setAmounts({ ...amounts, [s.scheme_code]: e.target.value })} className="l-input w-24 rounded-lg border px-2 py-2 text-right" />
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="mt-3 flex items-center justify-between gap-3 border-t l-line pt-4">
-          <p className="l-muted text-sm">Total {`₹${total.toLocaleString("en-IN")}`} a month</p>
-          <button disabled={busy} className={primary}>Save SIP amounts</button>
-        </div>
-        {note("sip")}
-      </form>
     </div>
   );
 }
